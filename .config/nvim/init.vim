@@ -20,6 +20,9 @@ Plug 'itchyny/lightline.vim'
 " NerdTree file tree
 Plug 'preservim/nerdtree'
 
+
+Plug 'hkupty/iron.nvim'
+
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -42,8 +45,16 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'Yggdroot/indentLine'
 
 
+" git 
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
 " Better python navigation
 Plug 'jeetsukumaran/vim-pythonsense'
+
+
+Plug 'machakann/vim-highlightedyank'
+
 
 " Linting
 Plug 'neomake/neomake'
@@ -53,6 +64,8 @@ Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 
 " vim slime --> sends code to ipython console
 Plug 'jpalardy/vim-slime'
+Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
+
 
 Plug 'liuchengxu/vim-which-key'
 
@@ -142,7 +155,7 @@ endif
 
 " --- Neomake syntax highlighting ---
 let g:neomake_python_flake8_maker = {
-    \ 'args': ['--ignore=E501,W503,E402,E116,E203',  '--format=default'],
+    \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391',  '--format=default'],
     \ 'errorformat':
         \ '%E%f:%l: could not compile,%-Z%p^,' .
         \ '%A%f:%l:%c: %t%n %m,' .
@@ -370,10 +383,11 @@ nmap <silent> <Leader>d <Plug>(pydocstring)
 
 
 
-" ----- vim-slime settings -----
-let g:slime_target = "neovim"
+" " ----- vim-slime settings -----
+let g:slime_target = "tmux"
 let g:slime_paste_file = "$HOME/.slime_paste"
 let g:slime_python_ipython = 1
+
 
 let g:slime_no_mappings = 1
 xmap <c-c> <Plug>SlimeRegionSend
@@ -381,7 +395,49 @@ nmap <c-c> <Plug>SlimeParagraphSend
 nmap <Leader>a :%SlimeSend<cr>
 
 let g:slime_cell_delimiter = "# %%"
+
+
+" ipython cell settings
+" map <Leader>s to start IPython
+nnoremap <Leader>i :SlimeSend1 ipython --matplotlib<CR>
+
+" map <Leader>Q to restart ipython
+nnoremap <Leader>I :IPythonCellRestart<CR>
+
+" map <F5> to save and run script
+nnoremap <Leader><F5> :IPythonCellRun<CR>
+
+" map <Leader>R to run script and time the execution
+nnoremap <Leader><F6> :IPythonCellRunTime<CR>
+
+" map <Leader>c to execute the current cell
 nmap <leader>s <Plug>SlimeSendCell
+
+" map <Leader>C to execute the current cell and jump to the next cell
+nnoremap <Leader>S :IPythonCellExecuteCellJump<CR>
+
+" map <Leader>l to clear IPython screen
+nnoremap <Leader>0 :IPythonCellClear<CR>
+
+" map <Leader>x to close all Matplotlib figure windows
+nnoremap <Leader>y :IPythonCellClose<CR>
+
+" map [c and ]c to jump to the previous and next cell header
+nnoremap [c :IPythonCellPrevCell<CR>
+nnoremap ]c :IPythonCellNextCell<CR>
+
+" map <Leader>p to run the previous command
+nnoremap <Leader>p :IPythonCellPrevCommand<CR>
+
+" map <Leader>d to start debug mode
+nnoremap <Leader><F7> :SlimeSend1 %debug<CR>
+
+" map <Leader>q to exit debug mode or IPython
+nnoremap <Leader>q :SlimeSend1 exit<CR>
+
+
+
+
 
 
 
@@ -390,30 +446,6 @@ nnoremap <silent> <leader> :WhichKey ','<CR>
 
 
 
-" === TMUX-like behavior ===
-" Maps ESC to exit terminal's insert mode
-set splitbelow
-set splitright
-if has('nvim')
-tnoremap <Esc> <C-\><C-n>
-endif
-
-" Maps ctrl-b + c to open a new tab window
-nnoremap <C-a>c :tabnew +terminal<CR>
-tnoremap <C-a>c <C-\><C-n>:tabnew +terminal<CR>
-
-nnoremap <C-a>- :sp <Bar> term<CR>
-tnoremap <C-a>- <C-\><C-n>:sp <Bar> term<CR>
-
-nnoremap <C-a><Bar> :vs <Bar> term<CR>
-tnoremap <C-a><Bar> <C-\><C-n>:vs <Bar> term<cr>
-
-augroup neovim_terminal
-    autocmd!
-
-    " Enter Terminal-mode (insert) automatically
-    autocmd TermOpen * startinsert
-
-    " Disables number lines on terminal buffers
-    autocmd TermOpen * :set nonumber norelativenumber
-augroup END
+" .md note taking
+map <leader>x ^rx: <Esc>:r! date +" [\%d.\%m.\%y \%H:\%M]"<ENTER>kJA<Esc>$
+map <leader>d :r! date +" [\%d.\%m.\%y \%H:\%M]"<ENTER>kJA<Esc>$
