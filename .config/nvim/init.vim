@@ -4,14 +4,11 @@ call plug#begin('~/.config/nvim/plugged')
 " Simpler code folding in Python:
 Plug 'tmhedberg/SimpylFold'
 
-" proper indentation
-Plug 'Vimjas/vim-python-pep8-indent'
-
 " Syntax highlighting
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " color scheme
-" Plug 'joshdick/onedark.vim'
+Plug 'joshdick/onedark.vim'
 Plug 'drewtempelmeyer/palenight.vim'
 
 " status bar at bottom
@@ -19,9 +16,6 @@ Plug 'itchyny/lightline.vim'
 
 " NerdTree file tree
 Plug 'preservim/nerdtree'
-
-
-Plug 'hkupty/iron.nvim'
 
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -38,12 +32,11 @@ Plug 'pbogut/fzf-mru.vim'
 Plug 'tmsvg/pear-tree'
 Plug 'junegunn/rainbow_parentheses.vim'
 
-" Show colors
-Plug 'norcalli/nvim-colorizer.lua'
-
 " Indent line
-Plug 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine', { 'for': ['python']}
 
+" tmux integration
+Plug 'christoomey/vim-tmux-navigator'
 
 " git 
 Plug 'tpope/vim-fugitive'
@@ -51,10 +44,6 @@ Plug 'airblade/vim-gitgutter'
 
 " Better python navigation
 Plug 'jeetsukumaran/vim-pythonsense'
-
-
-Plug 'machakann/vim-highlightedyank'
-
 
 " Linting
 Plug 'neomake/neomake'
@@ -66,14 +55,29 @@ Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 Plug 'jpalardy/vim-slime'
 Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
 
-
+" shows mapped leader keys
 Plug 'liuchengxu/vim-which-key'
+
+" smooth scrolling
+Plug 'psliwka/vim-smoothie'
 
 " make copy of current vim session
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 
+" Markdown stuff
+Plug 'junegunn/goyo.vim', {'for': ['markdown']}
+Plug 'reedes/vim-pencil', {'for': ['markdown']}
+Plug 'godlygeek/tabular', {'for': ['markdown']}
+Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vim-plug']}
+Plug 'vim-voom/voom', {'for': ['markdown']}
+Plug 'rhysd/vim-grammarous'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
+" Latex stuff
+Plug 'lervag/vimtex'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 " Initialize plugin system
 call plug#end()
@@ -83,7 +87,7 @@ call plug#end()
 " --> changing leader key to <,>
 let python_highlight_all=1
 if has('mac')
-    let g:python3_host_prog=expand('~/opt/anaconda3/envs/neovim/bin/python3.8')
+    let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
 else
     let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
 endif
@@ -94,22 +98,17 @@ set clipboard=unnamed " adds system-wide clipboard
 set undofile
 " set nobackup
 " set nowritebackup
-" set noswapfile
+set noswapfile
 set shiftwidth=4
+set foldlevel=99
 set expandtab
 set tabstop=4
 set softtabstop=4
 set nowrap
 set hidden
-" relative row numbers
 :set number relativenumber
-" Enable folding
-set foldmethod=indent
-set foldlevel=99
-" Use UTF-8 encoding:
 set encoding=utf-8
 set cursorline
-" When scrolling, keep cursor 5 lines away from screen border
 set scrolloff=10
 "  -----
 "  -----
@@ -130,12 +129,11 @@ let g:lightline = {
       \ 'colorscheme': 'palenight',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'cocstatus', 'currentfunction', 'filename', 'modified' ] ]
       \ },
       \ 'component_function': {
       \   'cocstatus': 'coc#status',
       \   'currentfunction': 'CocCurrentFunction',
-      \   'method': 'NearestMethodOrFunction'
       \ },
       \ 'separator': { 'left': '|', 'right': '|'},
       \ 'subseparator': { 'left': '|', 'right': '|'}
@@ -148,26 +146,6 @@ if (has("termguicolors"))
     set termguicolors
     hi LineNr ctermbg=NONE guibg=NONE
 endif
-
-
-
-
-
-" --- Neomake syntax highlighting ---
-let g:neomake_python_flake8_maker = {
-    \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391',  '--format=default'],
-    \ 'errorformat':
-        \ '%E%f:%l: could not compile,%-Z%p^,' .
-        \ '%A%f:%l:%c: %t%n %m,' .
-        \ '%A%f:%l: %t%n %m,' .
-        \ '%-G%.%#',
-    \ }
-let g:neomake_python_enabled_makers = ['flake8']
-call neomake#configure#automake('nw', 500)
-
-
-
-
 
 
 
@@ -187,7 +165,6 @@ nnoremap <Leader>n : NERDTreeToggle<cr>
 
 
 
-
 " --- NerdCommenter ---
 "  -----
 "  -----
@@ -196,6 +173,39 @@ let g:NERDSpaceDelims = 1
 let g:NERDTrimTrailingWhitespace = 1
 nnoremap <Leader>t :call NERDComment('Toggle', 'Toggle')<CR>
 
+
+
+" --- Rainbow brackets ---
+"  -----
+"  -----
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+autocmd FileType * RainbowParentheses
+
+
+
+
+" ==============================
+" ==============================
+" PYTHON =======================
+" ==============================
+" ==============================
+
+" --- SimpylFold
+let g:SimpylFold_docstring_preview = 1
+
+
+" --- Neomake syntax highlighting ---
+let g:neomake_python_flake8_maker = {
+    \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391',  '--format=default'],
+    \ 'errorformat':
+        \ '%E%f:%l: could not compile,%-Z%p^,' .
+        \ '%A%f:%l:%c: %t%n %m,' .
+        \ '%A%f:%l: %t%n %m,' .
+        \ '%-G%.%#',
+    \ }
+let g:neomake_python_enabled_makers = ['flake8']
+call neomake#configure#automake('nw', 500)
 
 
 " --- coc config ---
@@ -213,7 +223,7 @@ set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=150
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -253,23 +263,24 @@ else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" " Use `[g` and `]g` to navigate diagnostics
+" " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
-" nmap <silent> gy <Plug>(coc-type-definition)
-" nmap <silent> gi <Plug>(coc-implementation)
-" nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
+nnoremap <silent> K :call <sid>show_documentation()<cr>
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
+  if index(['vim', 'help'], &filetype) >= 0
+    execute 'help ' . expand('<cword>')
+  elseif &filetype ==# 'tex'
+    VimtexDocPackage
   else
     call CocAction('doHover')
   endif
@@ -281,52 +292,15 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-
-
-" --- Rainbow brackets ---
-"  -----
-"  -----
-let g:rainbow#max_level = 16
-let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
-
-autocmd FileType * RainbowParentheses
-
+let g:coc_global_extensions = [
+      \ 'coc-vimtex',
+      \ 'coc-python',
+      \ 'coc-json',
+      \ 'coc-yaml',
+      \]
 
 
 " --- fzf ---
@@ -371,23 +345,27 @@ let g:indentLine_showFirstIndentLevel = 1
 " pythonsense
 let g:is_pythonsense_suppress_motion_keymaps = 1
 let g:is_pythonsense_alternate_motion_keymaps = 1
+
+" pear_tree (auto brackets)
 let g:pear_tree_smart_openers = 1
 let g:pear_tree_smart_closers = 1
 let g:pear_tree_smart_backspace = 1
-
+" Automatically map <BS>, <CR>, and <Esc>
+let g:pear_tree_map_special_keys = 1
+" Default mappings:
+imap <BS> <Plug>(PearTreeBackspace)
+imap <CR> <Plug>(PearTreeExpand)
+imap <Esc> <Plug>(PearTreeFinishExpansion)
 
 
 " python docstring
 let g:pydocstring_formatter = 'google'
-nmap <silent> <Leader>d <Plug>(pydocstring)
-
 
 
 " " ----- vim-slime settings -----
 let g:slime_target = "tmux"
 let g:slime_paste_file = "$HOME/.slime_paste"
 let g:slime_python_ipython = 1
-
 
 let g:slime_no_mappings = 1
 xmap <c-c> <Plug>SlimeRegionSend
@@ -396,8 +374,7 @@ nmap <Leader>a :%SlimeSend<cr>
 
 let g:slime_cell_delimiter = "# %%"
 
-
-" ipython cell settings
+" --- ipython cell settings
 " map <Leader>s to start IPython
 nnoremap <Leader>i :SlimeSend1 ipython --matplotlib<CR>
 
@@ -405,10 +382,10 @@ nnoremap <Leader>i :SlimeSend1 ipython --matplotlib<CR>
 nnoremap <Leader>I :IPythonCellRestart<CR>
 
 " map <F5> to save and run script
-nnoremap <Leader><F5> :IPythonCellRun<CR>
+nnoremap <F5> :IPythonCellRun<CR>
 
 " map <Leader>R to run script and time the execution
-nnoremap <Leader><F6> :IPythonCellRunTime<CR>
+nnoremap <F6> :IPythonCellRunTime<CR>
 
 " map <Leader>c to execute the current cell
 nmap <leader>s <Plug>SlimeSendCell
@@ -430,22 +407,61 @@ nnoremap ]c :IPythonCellNextCell<CR>
 nnoremap <Leader>p :IPythonCellPrevCommand<CR>
 
 " map <Leader>d to start debug mode
-nnoremap <Leader><F7> :SlimeSend1 %debug<CR>
+nnoremap <F7> :SlimeSend1 %debug<CR>
 
 " map <Leader>q to exit debug mode or IPython
 nnoremap <Leader>q :SlimeSend1 exit<CR>
 
 
-
-
-
-
-
 " Vim whichkey
 nnoremap <silent> <leader> :WhichKey ','<CR>
 
-
-
 " .md note taking
+set conceallevel=0
+let g:vim_markdown_conceal = 0
+let g:tex_conceal = ""
+let g:goyo_width = 100
+let g:vim_markdown_math = 1
+let g:vim_markdown_frontmatter = 1
 map <leader>x ^rx: <Esc>:r! date +" [\%d.\%m.\%y \%H:\%M]"<ENTER>kJA<Esc>$
 map <leader>d :r! date +" [\%d.\%m.\%y \%H:\%M]"<ENTER>kJA<Esc>$
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init()
+  autocmd FileType text         call pencil#init({'wrap': 'hard'})
+augroup END
+
+" latex
+let g:tex_stylish = 1
+let g:vimtex_compiler_progname = 'nvr'
+let g:tex_conceal = ''
+let g:tex_flavor = 'latex'
+let g:tex_isk='48-57,a-z,A-Z,192-255,:'
+
+let g:vimtex_fold_enabled = 1
+let g:vimtex_fold_types = {
+      \ 'markers' : {'enabled': 0},
+      \ 'sections' : {'parse_levels': 1},
+      \}
+let g:vimtex_format_enabled = 1
+let g:vimtex_view_method = 'skim'
+let g:vimtex_view_automatic = 1
+let g:vimtex_view_forward_search_on_start = 0
+let g:vimtex_toc_config = {
+      \ 'split_pos' : 'full',
+      \ 'mode' : 2,
+      \ 'fold_enable' : 1,
+      \ 'hotkeys_enabled' : 1,
+      \ 'hotkeys_leader' : '',
+      \ 'refresh_always' : 0,
+      \}
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_autoclose_after_keystrokes = 3
+let g:vimtex_imaps_enabled = 1
+let g:vimtex_complete_img_use_tail = 1
+let g:vimtex_complete_bib = {
+      \ 'simple' : 1,
+      \ 'menu_fmt' : '@year, @author_short, @title',
+      \}
+let g:vimtex_echo_verbose_input = 0
