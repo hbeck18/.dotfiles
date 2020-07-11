@@ -300,6 +300,7 @@ let g:coc_global_extensions = [
       \ 'coc-python',
       \ 'coc-json',
       \ 'coc-yaml',
+      \ 'coc-yank'
       \]
 
 
@@ -325,7 +326,7 @@ if has('nvim-0.4.0') || has("patch-8.2.0191")
                 \ 'width': 0.9,
                 \ 'height': 0.7,
                 \ 'highlight': 'Comment',
-                \ 'rounded': v:false } }
+                \ 'rounded': v:true } }
 else
     let g:fzf_layout = { "window": "silent botright 16split enew" }
 endif
