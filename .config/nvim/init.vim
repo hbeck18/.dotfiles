@@ -66,13 +66,15 @@ Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 
 " Markdown stuff
-Plug 'junegunn/goyo.vim', {'for': ['markdown']}
-Plug 'reedes/vim-pencil', {'for': ['markdown']}
 Plug 'godlygeek/tabular', {'for': ['markdown']}
 Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vim-plug']}
-Plug 'vim-voom/voom', {'for': ['markdown']}
-Plug 'rhysd/vim-grammarous', {'for': ['markdown', 'tex']}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
+" Markdown+tex
+Plug 'junegunn/goyo.vim', {'for': ['markdown', 'tex']}
+Plug 'reedes/vim-pencil', {'for': ['markdown', 'tex']}
+Plug 'vim-voom/voom', {'for': ['markdown', 'tex']}
+Plug 'rhysd/vim-grammarous', {'for': ['markdown', 'tex']}
 
 " Latex stuff
 Plug 'lervag/vimtex', {'for': ['tex']}
