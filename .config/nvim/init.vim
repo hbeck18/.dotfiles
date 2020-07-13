@@ -71,13 +71,13 @@ Plug 'reedes/vim-pencil', {'for': ['markdown']}
 Plug 'godlygeek/tabular', {'for': ['markdown']}
 Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vim-plug']}
 Plug 'vim-voom/voom', {'for': ['markdown']}
-Plug 'rhysd/vim-grammarous'
+Plug 'rhysd/vim-grammarous', {'for': ['markdown', 'tex']}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 " Latex stuff
-Plug 'lervag/vimtex'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'lervag/vimtex', {'for': ['tex']}
+Plug 'SirVer/ultisnips', {'for': ['tex']}
+Plug 'honza/vim-snippets', {'for': ['tex']}
 
 " Initialize plugin system
 call plug#end()
