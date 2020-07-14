@@ -65,15 +65,18 @@ Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 
+" better autocompletion
+Plug 'ajh17/vimcompletesme'
+
 " Markdown stuff
 Plug 'godlygeek/tabular', {'for': ['markdown']}
 Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vim-plug']}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'vim-voom/voom', {'for': ['markdown']}
 
 " Markdown+tex
 Plug 'junegunn/goyo.vim', {'for': ['markdown', 'tex']}
 Plug 'reedes/vim-pencil', {'for': ['markdown', 'tex']}
-Plug 'vim-voom/voom', {'for': ['markdown', 'tex']}
 Plug 'rhysd/vim-grammarous', {'for': ['markdown', 'tex']}
 
 " Latex stuff
@@ -95,6 +98,7 @@ else
 endif
 syntax on
 let mapleader = ","  " changes leader key.
+let localleader = "l"
 " basic settings
 set clipboard=unnamed " adds system-wide clipboard
 set undofile
@@ -419,6 +423,7 @@ nnoremap <Leader>q :SlimeSend1 exit<CR>
 " Vim whichkey
 nnoremap <silent> <leader> :WhichKey ','<CR>
 
+
 " .md note taking
 set conceallevel=0
 let g:vim_markdown_conceal = 0
@@ -432,23 +437,35 @@ let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init()
-  autocmd FileType text         call pencil#init({'wrap': 'hard'})
+  autocmd FileType tex call pencil#init()
+  " autocmd FileType text         call pencil#init({'wrap': 'hard'})
 augroup END
 
+
 " latex
+augroup VimCompletesMeTex
+   autocmd!
+   autocmd FileType tex
+       \ let b:vcm_omni_pattern = g:vimtex#re#neocomplete
+augroup END
+if has('mac')
+    let g:vimtex_view_method = 'skim'
+elseif has('win32') || (has('unix') && exists('$WSLENV'))
+    let g:vimtex_view_general_viewer = 'sumatraPDF'
+    let g:vimtex_view_general_options = '-reuse-instance @pdf'
+    let g:vimtex_view_general_options_latexmk = '-reuse-instance'
+endif
 let g:tex_stylish = 1
 let g:vimtex_compiler_progname = 'nvr'
 let g:tex_conceal = ''
 let g:tex_flavor = 'latex'
 let g:tex_isk='48-57,a-z,A-Z,192-255,:'
-
 let g:vimtex_fold_enabled = 1
 let g:vimtex_fold_types = {
       \ 'markers' : {'enabled': 0},
       \ 'sections' : {'parse_levels': 1},
       \}
 let g:vimtex_format_enabled = 1
-let g:vimtex_view_method = 'skim'
 let g:vimtex_view_automatic = 1
 let g:vimtex_view_forward_search_on_start = 0
 let g:vimtex_toc_config = {
@@ -468,3 +485,8 @@ let g:vimtex_complete_bib = {
       \ 'menu_fmt' : '@year, @author_short, @title',
       \}
 let g:vimtex_echo_verbose_input = 0
+
+" ultisnippets
+let g:UltiSnipsExpandTrigger       = "<C-j>"
+let g:UltiSnipsJumpForwardTrigger  = "<C-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
