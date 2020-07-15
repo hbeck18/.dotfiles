@@ -84,6 +84,18 @@ Plug 'lervag/vimtex', {'for': ['tex']}
 Plug 'SirVer/ultisnips', {'for': ['tex']}
 Plug 'honza/vim-snippets', {'for': ['tex']}
 
+" better search
+Plug 'rhysd/clever-f.vim'
+
+" better indentation
+Plug 'michaeljsmith/vim-indent-object'
+
+" Undo tree
+Plug 'mbbill/undotree'
+
+" Substitution
+Plug 'svermeulen/vim-subversive'
+
 " Initialize plugin system
 call plug#end()
 
@@ -347,7 +359,8 @@ nnoremap <expr> <Leader>F (len(system('git rev-parse')) ? ':Files' : ':GFiles --
 let g:indentLine_first_char = '|'
 let g:indentLine_char = '|'
 let g:indentLine_showFirstIndentLevel = 1
-
+let g:indentLine_faster     = 1
+let g:indentLine_setConceal = 0
 
 " pythonsense
 let g:is_pythonsense_suppress_motion_keymaps = 1
@@ -491,3 +504,23 @@ let g:vimtex_echo_verbose_input = 0
 let g:UltiSnipsExpandTrigger       = "<C-j>"
 let g:UltiSnipsJumpForwardTrigger  = "<C-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
+
+
+" clever F
+let g:clever_f_across_no_line    = 1
+let g:clever_f_fix_key_direction = 1
+let g:clever_f_timeout_ms        = 3000
+
+
+" undo tree
+let g:undotree_HighlightChangedWithSign = 0
+let g:undotree_WindowLayout             = 4
+let g:undotree_SetFocusWhenToggle       = 1
+nnoremap <Leader>u :UndotreeToggle<CR>
+
+
+" subversive
+" s for substitute
+nmap s <plug>(SubversiveSubstitute)
+nmap ss <plug>(SubversiveSubstituteLine)
+nmap S <plug>(SubversiveSubstituteToEndOfLine)
