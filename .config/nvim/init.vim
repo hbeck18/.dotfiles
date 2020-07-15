@@ -360,7 +360,6 @@ let g:indentLine_first_char = '|'
 let g:indentLine_char = '|'
 let g:indentLine_showFirstIndentLevel = 1
 let g:indentLine_faster     = 1
-let g:indentLine_setConceal = 0
 
 " pythonsense
 let g:is_pythonsense_suppress_motion_keymaps = 1
