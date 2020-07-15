@@ -98,7 +98,7 @@ else
 endif
 syntax on
 let mapleader = ","  " changes leader key.
-let localleader = "l"
+let maplocalleader = "\\"
 " basic settings
 set clipboard=unnamed " adds system-wide clipboard
 set undofile
@@ -367,6 +367,7 @@ imap <Esc> <Plug>(PearTreeFinishExpansion)
 
 " python docstring
 let g:pydocstring_formatter = 'google'
+nmap <silent> <C-P> <Plug>(pydocstring)
 
 
 " " ----- vim-slime settings -----
