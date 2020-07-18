@@ -2,10 +2,10 @@
 call plug#begin('~/.config/nvim/plugged')
 
 " Simpler code folding in Python:
-Plug 'tmhedberg/SimpylFold'
+Plug 'tmhedberg/SimpylFold', { 'for': ['python']}
 
 " Syntax highlighting
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}, { 'for': ['python']}
 
 " color scheme
 Plug 'joshdick/onedark.vim'
@@ -18,7 +18,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 
 " coc
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}, { 'for': ['python']}
 
 " better comments
 Plug 'preservim/nerdcommenter'
@@ -43,7 +43,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Better python navigation
-Plug 'jeetsukumaran/vim-pythonsense'
+Plug 'jeetsukumaran/vim-pythonsense', { 'for': ['python']}
 
 " Linting
 Plug 'neomake/neomake'
@@ -52,8 +52,8 @@ Plug 'neomake/neomake'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 
 " vim slime --> sends code to ipython console
-Plug 'jpalardy/vim-slime'
-Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
+Plug 'jpalardy/vim-slime', { 'for': ['python']}
+Plug 'hanschen/vim-ipython-cell', { 'for': ['python']}
 
 " shows mapped leader keys
 Plug 'liuchengxu/vim-which-key'
@@ -128,7 +128,8 @@ set hidden
 set encoding=utf-8
 set cursorline
 set scrolloff=10
-"  -----
+map <C-S> :setlocal spell! spelllang=en_us<CR>
+" -----
 "  -----
 nnoremap <Leader><space> za
 nnoremap <C-J> <C-W><C-J>
