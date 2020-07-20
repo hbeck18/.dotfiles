@@ -5,7 +5,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tmhedberg/SimpylFold', { 'for': ['python']}
 
 " Syntax highlighting
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}, { 'for': ['python']}
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
 
 " color scheme
 Plug 'joshdick/onedark.vim'
@@ -18,7 +18,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 
 " coc
-Plug 'neoclide/coc.nvim', {'branch': 'release'}, { 'for': ['python']}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " better comments
 Plug 'preservim/nerdcommenter'
