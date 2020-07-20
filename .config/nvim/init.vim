@@ -58,9 +58,6 @@ Plug 'hanschen/vim-ipython-cell', { 'for': ['python']}
 " shows mapped leader keys
 Plug 'liuchengxu/vim-which-key'
 
-" smooth scrolling
-Plug 'psliwka/vim-smoothie'
-
 " make copy of current vim session
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
@@ -89,9 +86,6 @@ Plug 'rhysd/clever-f.vim'
 
 " better indentation
 Plug 'michaeljsmith/vim-indent-object'
-
-" Undo tree
-Plug 'mbbill/undotree'
 
 " Substitution
 Plug 'svermeulen/vim-subversive'
