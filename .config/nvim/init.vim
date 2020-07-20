@@ -46,9 +46,6 @@ Plug 'airblade/vim-gitgutter'
 " Better python navigation
 Plug 'jeetsukumaran/vim-pythonsense', { 'for': ['python']}
 
-" Linting
-Plug 'neomake/neomake'
-
 " python docstring
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 
@@ -210,16 +207,16 @@ let g:SimpylFold_docstring_preview = 1
 
 
 " --- Neomake syntax highlighting ---
-let g:neomake_python_flake8_maker = {
-    \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391',  '--format=default'],
-    \ 'errorformat':
-        \ '%E%f:%l: could not compile,%-Z%p^,' .
-        \ '%A%f:%l:%c: %t%n %m,' .
-        \ '%A%f:%l: %t%n %m,' .
-        \ '%-G%.%#',
-    \ }
-let g:neomake_python_enabled_makers = ['flake8']
-call neomake#configure#automake('nw', 500)
+" let g:neomake_python_flake8_maker = {
+    " \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391',  '--format=default'],
+    " \ 'errorformat':
+        " \ '%E%f:%l: could not compile,%-Z%p^,' .
+        " \ '%A%f:%l:%c: %t%n %m,' .
+        " \ '%A%f:%l: %t%n %m,' .
+        " \ '%-G%.%#',
+    " \ }
+" let g:neomake_python_enabled_makers = ['flake8']
+" call neomake#configure#automake('nw', 500)
 
 
 " --- coc config ---
