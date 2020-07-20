@@ -85,8 +85,12 @@ Plug 'rhysd/clever-f.vim'
 " better indentation
 Plug 'michaeljsmith/vim-indent-object'
 
-" Substitution
+" Better yanking/substition
 Plug 'svermeulen/vim-subversive'
+Plug 'svermeulen/vim-yoink'
+
+" easy motion
+Plug 'easymotion/vim-easymotion'
 
 " Initialize plugin system
 call plug#end()
@@ -516,3 +520,11 @@ nnoremap <Leader>u :UndotreeToggle<CR>
 nmap s <plug>(SubversiveSubstitute)
 nmap ss <plug>(SubversiveSubstituteLine)
 nmap S <plug>(SubversiveSubstituteToEndOfLine)
+xmap s <plug>(SubversiveSubstitute)
+xmap p <plug>(SubversiveSubstitute)
+xmap P <plug>(SubversiveSubstitute)
+" yoink history
+nmap <c-n> <plug>(YoinkPostPasteSwapBack)
+nmap <c-p> <plug>(YoinkPostPasteSwapForward)
+nmap p <plug>(YoinkPaste_p)
+nmap P <plug>(YoinkPaste_P)
