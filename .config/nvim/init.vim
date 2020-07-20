@@ -30,6 +30,7 @@ Plug 'pbogut/fzf-mru.vim'
 
 " auto brackets
 Plug 'tmsvg/pear-tree'
+Plug 'tpope/vim-surround'
 Plug 'junegunn/rainbow_parentheses.vim'
 
 " Indent line
