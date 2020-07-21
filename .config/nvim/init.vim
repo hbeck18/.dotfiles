@@ -94,6 +94,7 @@ Plug 'easymotion/vim-easymotion'
 
 " linting
 Plug 'neomake/neomake'
+Plug 'sinetoami/lightline-neomake'
 
 
 " Initialize plugin system
@@ -165,8 +166,21 @@ if (has("termguicolors"))
     set termguicolors
     hi LineNr ctermbg=NONE guibg=NONE
 endif
-
-
+let g:lightline.component_expand = {
+  \ 'neomake_infos': 'lightline#neomake#infos',
+  \ 'neomake_warnings': 'lightline#neomake#warnings',
+  \ 'neomake_errors': 'lightline#neomake#errors',
+  \ 'neomake_ok': 'lightline#neomake#ok',
+\}
+let g:lightline.active = {
+  \ 'right': [['neomake_warnings', 'neomake_errors',
+  \            'neomake_infos', 'neomake_ok']],
+\}
+let g:lightline.component_type = {
+  \ 'neomake_warnings': 'warning',
+  \ 'neomake_errors': 'error',
+  \ 'neomake_ok': 'left',
+\}
 
 " --- Nerdtree Settings ---
 "  -------
