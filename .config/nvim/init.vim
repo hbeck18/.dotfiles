@@ -437,6 +437,7 @@ nnoremap <Leader>q :SlimeSend1 exit<CR>
 
 " Vim whichkey
 nnoremap <silent> <leader> :WhichKey ','<CR>
+nnoremap <silent> <Localleader> :WhichKey '\'<CR>
 
 
 " .md note taking
