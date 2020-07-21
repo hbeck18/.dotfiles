@@ -381,7 +381,7 @@ imap <Esc> <Plug>(PearTreeFinishExpansion)
 
 " python docstring
 let g:pydocstring_formatter = 'google'
-nmap <silent> <C-P> <Plug>(pydocstring)
+nmap <silent> <C-_> <Plug>(pydocstring)
 
 
 " " ----- vim-slime settings -----
