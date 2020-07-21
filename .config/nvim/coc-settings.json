@@ -9,8 +9,8 @@
     ],
     // Python
     "coc.preferences.hoverTarget": "float",
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": false,
+    "python.linting.flake8Enabled": false,
     "python.linting.flake8Path": "~/anaconda3/envs/neovim/bin/flake8",
     "python.linting.flake8Args": [
         "--ignore=E501,W503,E402,E116,E203,W391",
