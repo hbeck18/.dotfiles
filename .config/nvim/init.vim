@@ -164,8 +164,6 @@ let g:lightline = {
     \       'neomake': 'error',
     \   },
 \ }
-" Use auocmd to force lightline update.
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 set background=dark
 colorscheme palenight
 " checks if your terminal has 24-bit color support ::: comment if working on
