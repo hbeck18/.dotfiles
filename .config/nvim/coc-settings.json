@@ -1,5 +1,6 @@
 {
     // autoformat
+    "coc.preferences.currentFunctionSymbolAutoUpdate": true,
     "coc.preferences.formatOnSaveFiletypes": [
         "markdown",
         "yaml",

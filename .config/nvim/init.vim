@@ -20,6 +20,9 @@ Plug 'preservim/nerdtree'
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Vista
+Plug 'liuchengxu/vista.vim'
+
 " better comments
 Plug 'preservim/nerdcommenter'
 
@@ -70,9 +73,9 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 Plug 'vim-voom/voom', {'for': ['markdown']}
 
 " Markdown+tex
-Plug 'junegunn/goyo.vim', {'for': ['markdown', 'tex']}
-Plug 'reedes/vim-pencil', {'for': ['markdown', 'tex']}
-Plug 'rhysd/vim-grammarous', {'for': ['markdown', 'tex']}
+Plug 'junegunn/goyo.vim', {'for': ['markdown', 'tex', 'text']}
+Plug 'reedes/vim-pencil', {'for': ['markdown', 'tex', 'text']}
+Plug 'rhysd/vim-grammarous', {'for': ['markdown', 'tex', 'text']}
 
 " Latex stuff
 Plug 'lervag/vimtex', {'for': ['tex']}
@@ -94,8 +97,7 @@ Plug 'easymotion/vim-easymotion'
 
 " linting
 Plug 'neomake/neomake'
-Plug 'sinetoami/lightline-neomake'
-
+Plug 'mkalinski/vim-lightline_neomake'
 
 " Initialize plugin system
 call plug#end()
@@ -141,23 +143,32 @@ nnoremap <CR> o<Esc>
 nnoremap <S-CR> O<Esc>
 
 
-
-
-
 " --- color scheme ---
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
 let g:lightline = {
-      \ 'colorscheme': 'palenight',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'currentfunction', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status',
-      \   'currentfunction': 'CocCurrentFunction',
-      \ },
-      \ 'separator': { 'left': '|', 'right': '|'},
-      \ 'subseparator': { 'left': '|', 'right': '|'}
-      \ }
+    \ 'colorscheme': 'palenight',
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \             [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ],
+    \   'right': [ [ 'neomake', 'lineinfo' ],
+    \              [ 'percent '],
+    \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+    \ },
+    \   'component_function': {
+    \       'cocstatus': 'coc#status',
+    \       'currentfunction': 'CocCurrentFunction',
+    \ },
+    \   'component_expand': {
+    \       'neomake': 'lightline_neomake#component',
+    \   },
+    \   'component_type': {
+    \       'neomake': 'error',
+    \   },
+\ }
+" Use auocmd to force lightline update.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 set background=dark
 colorscheme palenight
 " checks if your terminal has 24-bit color support ::: comment if working on
@@ -166,21 +177,6 @@ if (has("termguicolors"))
     set termguicolors
     hi LineNr ctermbg=NONE guibg=NONE
 endif
-let g:lightline.component_expand = {
-  \ 'neomake_infos': 'lightline#neomake#infos',
-  \ 'neomake_warnings': 'lightline#neomake#warnings',
-  \ 'neomake_errors': 'lightline#neomake#errors',
-  \ 'neomake_ok': 'lightline#neomake#ok',
-\}
-let g:lightline.active = {
-  \ 'right': [['neomake_warnings', 'neomake_errors',
-  \            'neomake_infos', 'neomake_ok']],
-\}
-let g:lightline.component_type = {
-  \ 'neomake_warnings': 'warning',
-  \ 'neomake_errors': 'error',
-  \ 'neomake_ok': 'left',
-\}
 
 " --- Nerdtree Settings ---
 "  -------
@@ -256,7 +252,7 @@ set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=150
+set updatetime=100
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -296,11 +292,6 @@ else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
-" " Use `[g` and `]g` to navigate diagnostics
-" " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-" nmap <silent> [g <Plug>(coc-diagnostic-prev)
-" nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -337,9 +328,42 @@ let g:coc_global_extensions = [
       \]
 
 
-" --- fzf ---
-"  -----
-"  -----
+" --- VISTA ---
+"  ++++++++++++++++
+"  ++++++++++++++++
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+" Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
+let g:vista_icon_indent = ["▸ ", ""]
+" Executive used when opening vista sidebar without specifying it.
+" See all the avaliable executives via `:echo g:vista#executives`.
+let g:vista_default_executive = 'ctags'
+let g:vista_executive_for = {
+  \ 'python': 'coc',
+  \ }
+" To enable fzf's preview window set g:vista_fzf_preview.
+" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+" For example:
+let g:vista_fzf_preview = ['right:50%']
+
+" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+
+nnoremap <silent> <Leader>v :Vista!!<CR>
+nnoremap <silent> <Localleader>v :Vista finder coc<CR>
+
+
+
+
+" --- fzf -------------------------------------
+"  --------------------------------------------
+"  --------------------------------------------
 if has("nvim")
     " Escape inside a FZF terminal window should exit the terminal window
     " rather than going into the terminal's normal mode.
