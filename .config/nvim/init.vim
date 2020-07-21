@@ -331,10 +331,6 @@ let g:coc_global_extensions = [
 " --- VISTA ---
 "  ++++++++++++++++
 "  ++++++++++++++++
-function! NearestMethodOrFunction() abort
-  return get(b:, 'vista_nearest_method_or_function', '')
-endfunction
-autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 " Note: this option only works the LSP executives, doesn't work for `:Vista ctags`.
 let g:vista_icon_indent = ["▸ ", ""]
 " Executive used when opening vista sidebar without specifying it.
