@@ -21,7 +21,7 @@
     "python.formatting.provider": "black",
     "python.formatting.blackPath": "~/anaconda3/envs/neovim/bin/black",
     "python.condaPath": "~/anaconda3/bin/conda",
-    //"python.jediEnabled": false,
+    "python.jediEnabled": false,
     "python.jediPath": "~/anaconda3/envs/neovim/lib/python3.8/site-packages/",
     // Bash
     "languageserver": {
