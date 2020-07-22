@@ -457,6 +457,10 @@ augroup pencil
   " autocmd FileType text         call pencil#init({'wrap': 'hard'})
 augroup END
 
+" voom settings
+let g:voom_default_mode = "pandoc"
+let g:voom_tree_placement = "top"
+
 
 " latex
 augroup VimCompletesMeTex
