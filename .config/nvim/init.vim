@@ -404,10 +404,8 @@ nnoremap <Leader>i :SlimeSend1 ipython --matplotlib<CR>
 nnoremap <Leader>I :IPythonCellRestart<CR>
 
 " map <F5> to save and run script
-nnoremap <F5> :IPythonCellRun<CR>
-
-" map <Leader>R to run script and time the execution
-nnoremap <F6> :IPythonCellRunTime<CR>
+" nnoremap <F5> :IPythonCellRun<CR>
+nnorema <F5> :exe "!tmux send -t 2 '\\%run -t " . expand("%") . "' Enter "<CR>
 
 " map <Leader>c to execute the current cell
 nmap <leader>s <Plug>SlimeSendCell
