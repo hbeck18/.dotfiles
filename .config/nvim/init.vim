@@ -14,9 +14,6 @@ Plug 'drewtempelmeyer/palenight.vim'
 " status bar at bottom
 Plug 'itchyny/lightline.vim'
 
-" NerdTree file tree
-" Plug 'preservim/nerdtree'
-
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -316,7 +313,8 @@ let g:coc_global_extensions = [
       \ 'coc-python',
       \ 'coc-json',
       \ 'coc-yaml',
-      \ 'coc-yank'
+      \ 'coc-yank',
+      \ 'coc-explorer'
       \]
 
 
@@ -529,3 +527,7 @@ nmap <c-n> <plug>(YoinkPostPasteSwapBack)
 nmap <c-p> <plug>(YoinkPostPasteSwapForward)
 nmap p <plug>(YoinkPaste_p)
 nmap P <plug>(YoinkPaste_P)
+
+
+" coc explorer
+:nmap <Leader>n :CocCommand explorer<CR>
