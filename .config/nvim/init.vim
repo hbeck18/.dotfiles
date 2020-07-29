@@ -15,7 +15,7 @@ Plug 'drewtempelmeyer/palenight.vim'
 Plug 'itchyny/lightline.vim'
 
 " NerdTree file tree
-Plug 'preservim/nerdtree'
+" Plug 'preservim/nerdtree'
 
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -45,9 +45,6 @@ Plug 'airblade/vim-gitgutter'
 
 " Better python navigation
 Plug 'jeetsukumaran/vim-pythonsense', { 'for': ['python']}
-
-" python docstring
-Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 
 " vim slime --> sends code to ipython console
 Plug 'jpalardy/vim-slime', { 'for': ['python']}
@@ -173,19 +170,19 @@ if (has("termguicolors"))
     hi LineNr ctermbg=NONE guibg=NONE
 endif
 
-" --- Nerdtree Settings ---
-"  -------
-"  -------
-let NERDTreeIgnore=['\.pyc$', '__pycache__'] "ignore files in NERDTree
-" enable line numbers
-let NERDTreeShowLineNumbers=1
-autocmd FileType nerdtree setlocal relativenumber
-let NERDTreeShowHidden = 1
-let g:NERDTreeHighlightFolders = 1
-let g:NERDTreeHighlightFoldersFullName = 1
-let g:NERDTreeHighlightFolders = 1
-let g:NERDTreeHighlightFoldersFullName = 1
-nnoremap <Leader>n : NERDTreeToggle<cr>
+" " --- Nerdtree Settings ---
+" "  -------
+" "  -------
+" let NERDTreeIgnore=['\.pyc$', '__pycache__'] "ignore files in NERDTree
+" " enable line numbers
+" let NERDTreeShowLineNumbers=1
+" autocmd FileType nerdtree setlocal relativenumber
+" let NERDTreeShowHidden = 1
+" let g:NERDTreeHighlightFolders = 1
+" let g:NERDTreeHighlightFoldersFullName = 1
+" let g:NERDTreeHighlightFolders = 1
+" let g:NERDTreeHighlightFoldersFullName = 1
+" nnoremap <Leader>n : NERDTreeToggle<cr>
 
 
 
@@ -378,10 +375,6 @@ imap <BS> <Plug>(PearTreeBackspace)
 imap <CR> <Plug>(PearTreeExpand)
 imap <Esc> <Plug>(PearTreeFinishExpansion)
 
-
-" python docstring
-let g:pydocstring_formatter = 'google'
-nmap <silent> <C-_> <Plug>(pydocstring)
 
 
 " " ----- vim-slime settings -----
