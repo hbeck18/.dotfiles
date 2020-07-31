@@ -10,8 +10,12 @@ augroup VimCompletesMeTex
 augroup END
 if has('mac')
     let g:vimtex_view_method = 'skim'
-elseif has('win32') || (has('unix') && exists('$WSLENV'))
+elseif has('win32')
     let g:vimtex_view_general_viewer = 'sumatraPDF'
+    let g:vimtex_view_general_options = '-reuse-instance @pdf'
+    let g:vimtex_view_general_options_latexmk = '-reuse-instance'
+elseif (has('unix') && exists('$WSLENV'))
+    let g:vimtex_view_general_viewer = 'zathura'
     let g:vimtex_view_general_options = '-reuse-instance @pdf'
     let g:vimtex_view_general_options_latexmk = '-reuse-instance'
 endif
