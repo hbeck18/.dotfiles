@@ -1,0 +1,50 @@
+" ===============================================
+" --- Statusline ---
+" ===============================================
+" ===============================================
+
+function! LightlineMode()
+  return &filetype ==# 'vista' ? 'VISTA' :
+        \ &filetype ==# 'ctrlsf' ? 'CTRLSF' :
+        \ &filetype ==# 'fugitive' ? 'FUGITIVE' :
+        \ &filetype ==# 'fzf' ? 'FZF' :
+        \ lightline#mode()
+endfunction
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+let g:lightline#ale#indicator_checking = "\uf110"
+let g:lightline#ale#indicator_infos = "\uf129"
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e"
+let g:lightline#ale#indicator_ok = "\uf00c"
+
+let g:lightline = {}
+let g:lightline.colorscheme = 'palenight'
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_infos': 'lightline#ale#infos',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_function = {
+    \ 'cocstatus': 'coc#status',
+    \ 'currentfunction': 'CocCurrentFunction',
+    \ 'mode': 'LightlineMode',
+    \ 'method': 'NearestMethodOrFunction',
+    \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'right',
+      \     'linter_infos': 'right',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'right',
+      \ }
+let g:lightline.active = { 
+    \ 'left': [ [ 'mode' ], 
+    \          ['cocstatus', 'method', 'filename', 'modified' ] ],
+    \ 'right': [ [ 'lineinfo' ], 
+    \            [ 'percent' ], 
+    \            [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ]
+    \ }

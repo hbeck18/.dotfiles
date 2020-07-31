@@ -1,4 +1,20 @@
 {
+    // explorer
+    "explorer.icon.enableNerdfont": true,
+    "explorer.previewAction.onHover": false,
+    "explorer.icon.enableVimDevicons": false,
+    "explorer.keyMappings": {
+        "<cr>": [
+            "expandable?",
+            [
+                "expanded?",
+                "collapse",
+                "expand"
+            ],
+            "open"
+        ],
+        "v": "open:vsplit"
+    },
     // autoformat
     "coc.preferences.currentFunctionSymbolAutoUpdate": true,
     "coc.preferences.formatOnSaveFiletypes": [
@@ -10,9 +26,9 @@
     ],
     // Python
     "coc.preferences.hoverTarget": "float",
-    "python.linting.enabled": false,
-    "python.analysis.diagnosticEnabled": false,
-    "python.linting.flake8Enabled": false,
+    "python.linting.enabled": true,
+    "python.analysis.diagnosticEnabled": true,
+    "python.linting.flake8Enabled": true,
     "python.linting.flake8Path": "~/anaconda3/envs/neovim/bin/flake8",
     "python.linting.flake8Args": [
         "--ignore=E501,W503,E402,E116,E203,W391",
@@ -24,19 +40,6 @@
     "python.condaPath": "~/anaconda3/bin/conda",
     "python.jediEnabled": false,
     "python.jediPath": "~/anaconda3/envs/neovim/lib/python3.8/site-packages/",
-    // Bash
-    "languageserver": {
-        "bash": {
-            "command": "bash-language-server",
-            "args": [
-                "start"
-            ],
-            "filetypes": [
-                "sh"
-            ],
-            "ignoredRootPaths": [
-                "~"
-            ]
-        }
-    }
+    // diagnostics
+    "diagnostic.displayByAle": true
 }
