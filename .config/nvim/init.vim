@@ -1,4 +1,4 @@
-" Specify a directory for plugins:A
+" Specify a directory for plugins:
 call plug#begin('~/.config/nvim/plugged')
 
 " Simpler code folding in Python:
@@ -213,19 +213,6 @@ nnoremap <Leader>t :call NERDComment('Toggle', 'Toggle')<CR>
 let g:rainbow#max_level = 16
 let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 autocmd FileType * RainbowParentheses
-
-
-" --- Neomake syntax highlighting ---
-" let g:neomake_python_flake8_maker = {
-    " \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391',  '--format=default'],
-    " \ 'errorformat':
-        " \ '%E%f:%l: could not compile,%-Z%p^,' .
-        " \ '%A%f:%l:%c: %t%n %m,' .
-        " \ '%A%f:%l: %t%n %m,' .
-        " \ '%-G%.%#',
-    " \ }
-" let g:neomake_python_enabled_makers = ['flake8']
-" call neomake#configure#automake('nw', 500)
 
 
 " pear_tree (auto brackets)
