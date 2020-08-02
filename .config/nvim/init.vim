@@ -1,14 +1,10 @@
 " Specify a directory for plugins:
 call plug#begin('~/.config/nvim/plugged')
 
-" Simpler code folding in Python:
-Plug 'tmhedberg/SimpylFold', { 'for': ['python']}
-
 " Syntax highlighting
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
 
 " color scheme
-Plug 'joshdick/onedark.vim'
 Plug 'drewtempelmeyer/palenight.vim'
 
 " status bar at bottom
@@ -26,10 +22,9 @@ Plug 'preservim/nerdcommenter'
 " fuzzy search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'pbogut/fzf-mru.vim'
 
 " auto brackets
-Plug 'tmsvg/pear-tree'
+Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/rainbow_parentheses.vim'
 
@@ -40,7 +35,6 @@ Plug 'Yggdroot/indentLine', { 'for': ['python']}
 Plug 'christoomey/vim-tmux-navigator'
 
 " git 
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " vim slime --> sends code to ipython console
@@ -60,7 +54,6 @@ Plug 'ajh17/vimcompletesme'
 " Markdown stuff
 Plug 'godlygeek/tabular', {'for': ['markdown']}
 Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vim-plug']}
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'vim-voom/voom', {'for': ['markdown']}
 
 " Markdown+tex
@@ -76,9 +69,6 @@ Plug 'honza/vim-snippets', {'for': ['tex']}
 " better search
 Plug 'rhysd/clever-f.vim'
 
-" better indentation
-Plug 'michaeljsmith/vim-indent-object'
-
 " Better yanking/substition
 Plug 'svermeulen/vim-subversive'
 Plug 'svermeulen/vim-yoink'
@@ -87,16 +77,11 @@ Plug 'svermeulen/vim-yoink'
 Plug 'easymotion/vim-easymotion'
 
 " linting
-" Plug 'neomake/neomake'
-" Plug 'mkalinski/vim-lightline_neomake'
 Plug 'dense-analysis/ale', { 'for': ['python']}
 Plug 'maximbaz/lightline-ale', { 'for': ['python']}
 
 " undo tree
 Plug 'mbbill/undotree'
-
-" devicons
-Plug 'ryanoasis/vim-devicons'
 
 " Initialize plugin system
 call plug#end()
@@ -215,18 +200,6 @@ let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 autocmd FileType * RainbowParentheses
 
 
-" pear_tree (auto brackets)
-let g:pear_tree_smart_openers = 0
-let g:pear_tree_smart_closers = 0
-let g:pear_tree_smart_backspace = 0
-" Automatically map <BS>, <CR>, and <Esc>
-let g:pear_tree_map_special_keys = 1
-" Default mappings:
-imap <BS> <Plug>(PearTreeBackspace)
-imap <CR> <Plug>(PearTreeExpand)
-imap <Esc> <Plug>(PearTreeFinishExpansion)
-
-
 " Vim whichkey
 nnoremap <silent> <leader> :WhichKey ','<CR>
 nnoremap <silent> <Localleader> :WhichKey '\'<CR>
@@ -291,8 +264,6 @@ elseif has('win32')
     let g:vimtex_view_general_options_latexmk = '-reuse-instance'
 elseif (has('unix') && exists('$WSLENV'))
     let g:vimtex_view_general_viewer = 'zathura'
-    let g:vimtex_view_general_options = '-reuse-instance @pdf'
-    let g:vimtex_view_general_options_latexmk = '-reuse-instance'
 endif
 let g:tex_stylish = 1
 let g:vimtex_compiler_progname = 'nvr'
@@ -370,55 +341,38 @@ let g:voom_tree_placement = "top"
 " --- Slime ---
 " =========================================
 " =========================================
-
-
 let g:slime_target = "tmux"
 let g:slime_paste_file = "$HOME/.slime_paste"
 let g:slime_python_ipython = 1
-
 let g:slime_no_mappings = 1
 xmap <c-c> <Plug>SlimeRegionSend
 nmap <c-c> <Plug>SlimeParagraphSend
 nmap <Leader>a :%SlimeSend<cr>
-
 let g:slime_cell_delimiter = "# %%"
 
 " --- ipython cell settings
 " map <Leader>s to start IPython
 nnoremap <Leader>i :SlimeSend1 ipython --matplotlib<CR>
-
 " map <Leader>Q to restart ipython
 nnoremap <Leader>I :IPythonCellRestart<CR>
-
 " map <F5> to save and run script
 " nnoremap <F5> :IPythonCellRun<CR>
 nnorema <F5> :exe "!tmux send -t 2 '\\%run -t " . expand("%") . "' Enter "<CR>
-
 " map <Leader>c to execute the current cell
 nmap <leader>s <Plug>SlimeSendCell
-
 " map <Leader>C to execute the current cell and jump to the next cell
 nnoremap <Leader>S :IPythonCellExecuteCellJump<CR>
-
 " map <Leader>l to clear IPython screen
 nnoremap <Leader>0 :IPythonCellClear<CR>
-
 " map [c and ]c to jump to the previous and next cell header
 nnoremap [c :IPythonCellPrevCell<CR>
 nnoremap ]c :IPythonCellNextCell<CR>
-
 " map <Leader>p to run the previous command
 nnoremap <Leader>p :IPythonCellPrevCommand<CR>
-
 " map <Leader>d to start debug mode
 nnoremap <F6> :SlimeSend1 %debug<CR>
-
 " map <Leader>q to exit debug mode or IPython
 nnoremap <Leader>q :SlimeSend1 exit<CR>
-
-
-
-
 
 
 
@@ -568,12 +522,10 @@ inoremap <silent><expr> <TAB>
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
 let g:coc_snippet_next = '<tab>'
 
 
@@ -583,7 +535,6 @@ let g:vista_default_executive = 'ctags'
 let g:vista_executive_for = {
   \ 'python': 'coc',
   \ }
-
 " To enable fzf's preview window set g:vista_fzf_preview.
 " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
 let g:vista_fzf_preview = ['right:50%']
@@ -592,15 +543,8 @@ let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "\uf71b",
 \  }
-
 " key mapping.
 nnoremap <Leader>v :Vista coc<CR>
-
-
-
-
-
-
 
 
 
@@ -612,8 +556,6 @@ nnoremap <Leader>v :Vista coc<CR>
 " --- Python ---
 " ================================
 " ================================
-
-
 let python_highlight_all=1
 let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
 
@@ -629,21 +571,18 @@ let g:ale_linters = {
 \}
 let g:ale_python_flake8_options = '--ignore=E501,W503,E402,E116,E203,W391'
 
-function! LinterStatus() abort
-    let l:counts = ale#statusline#Count(bufnr(''))
-    let l:all_errors = l:counts.error + l:counts.style_error
-    let l:all_non_errors = l:counts.total - l:all_errors
-    return l:counts.total == 0 ? 'OK' : printf(
-        \   '%d? %d? ',
-        \   all_non_errors,
-        \   all_errors
-        \)
-endfunction
-set statusline+=%=
-set statusline+=\ %{LinterStatus()}
-
-
-
+" function! LinterStatus() abort
+    " let l:counts = ale#statusline#Count(bufnr(''))
+    " let l:all_errors = l:counts.error + l:counts.style_error
+    " let l:all_non_errors = l:counts.total - l:all_errors
+    " return l:counts.total == 0 ? 'OK' : printf(
+        " \   '%d? %d? ',
+        " \   all_non_errors,
+        " \   all_errors
+        " \)
+" endfunction
+" set statusline+=%=
+" set statusline+=\ %{LinterStatus()}
 
 
 
@@ -680,19 +619,3 @@ endif
 " If in git directory, show only files that are committed, staged, or unstaged
 " else use regular :Files
 nnoremap <expr> <Leader>F (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
-
-let g:fzf_colors =
-      \ { 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'border':  ['fg', 'Ignore'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
-
