@@ -107,27 +107,8 @@ nnoremap <silent> <Leader>y  :<C-u>CocList -A --normal yank<cr>
 
 
 " =============== coc explorer ============================
-:nmap <Leader>n :CocCommand explorer<CR>
-let g:coc_explorer_global_presets = {
-\   'floating': {
-\      'position': 'floating',
-\   },
-\   'floatingLeftside': {
-\      'position': 'floating',
-\      'floating-position': 'left-center',
-\      'floating-width': 30,
-\   },
-\   'floatingRightside': {
-\      'position': 'floating',
-\      'floating-position': 'right-center',
-\      'floating-width': 30,
-\   },
-\   'simplify': {
-\     'file.child.template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
-\   }
-\ }
-
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
+nmap <Leader>n :CocCommand explorer<CR>
 nmap <space>ef :CocCommand explorer --preset floating<CR>
 
 

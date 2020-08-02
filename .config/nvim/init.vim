@@ -89,11 +89,14 @@ Plug 'easymotion/vim-easymotion'
 " linting
 " Plug 'neomake/neomake'
 " Plug 'mkalinski/vim-lightline_neomake'
-Plug 'dense-analysis/ale'
-Plug 'maximbaz/lightline-ale'
+Plug 'dense-analysis/ale', { 'for': ['python']}
+Plug 'maximbaz/lightline-ale', { 'for': ['python']}
 
 " undo tree
 Plug 'mbbill/undotree'
+
+" devicons
+Plug 'ryanoasis/vim-devicons'
 
 " Initialize plugin system
 call plug#end()
@@ -120,13 +123,13 @@ set softtabstop=4
 set nowrap
 set hidden
 set number relativenumber
-set encoding=utf-8
-set fileencoding=utf-8
+set encoding=UTF-8
+set fileencodings=utf-8
+set guifont=Fira\ Code
 set cursorline
 set scrolloff=10
 set updatetime=300
 set foldmethod=manual
-set guifont=Fira\ Code\ Nerd\ Font
 map <C-S> :setlocal spell! spelllang=en_us<CR>
 " -----
 "  -----
