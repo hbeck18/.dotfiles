@@ -24,7 +24,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " auto brackets
-Plug 'jiangmiao/auto-pairs'
+Plug 'tmsvg/pear-tree'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/rainbow_parentheses.vim'
 
@@ -97,8 +97,6 @@ let maplocalleader = "\\"
 " basic settings
 set clipboard=unnamed " adds system-wide clipboard
 set undofile
-" set nobackup
-" set nowritebackup
 set noswapfile
 set shiftwidth=4
 set foldlevel=99
@@ -157,7 +155,6 @@ let g:lightline.component_expand = {
       \ }
 let g:lightline.component_function = {
     \ 'cocstatus': 'coc#status',
-    \ 'currentfunction': 'CocCurrentFunction',
     \ 'mode': 'LightlineMode',
     \ 'method': 'NearestMethodOrFunction',
     \ }
@@ -191,6 +188,12 @@ let g:NERDSpaceDelims = 1
 let g:NERDTrimTrailingWhitespace = 1
 nnoremap <Leader>t :call NERDComment('Toggle', 'Toggle')<CR>
 
+
+" --- Pear Tree
+
+let g:pear_tree_smart_openers = 1
+let g:pear_tree_smart_closers = 1
+let g:pear_tree_smart_backspace = 1
 
 " --- Rainbow brackets ---
 "  -----
@@ -250,6 +253,9 @@ nmap P <plug>(YoinkPaste_P)
 " --- Latex ---
 " ============================================
 " ============================================
+" let g:vimtex_view_method = 'zathura'
+" let g:vimtex_compiler_progname = 'nvr'
+" let g:tex_flavor = "latex"
 
 augroup VimCompletesMeTex
    autocmd!
@@ -259,25 +265,24 @@ augroup END
 if has('mac')
     let g:vimtex_view_method = 'skim'
 elseif has('win32')
-    let g:vimtex_view_general_viewer = 'sumatraPDF'
+    let g:vimtex_view_method = 'sumatrapdf'
     let g:vimtex_view_general_options = '-reuse-instance @pdf'
     let g:vimtex_view_general_options_latexmk = '-reuse-instance'
-elseif (has('unix') && exists('$WSLENV'))
-    let g:vimtex_view_general_viewer = 'zathura'
+elseif has('unix')
+    let g:vimtex_view_method = 'zathura'
 endif
-let g:tex_stylish = 1
 let g:vimtex_compiler_progname = 'nvr'
+let g:tex_flavor = "latex"
+let g:tex_stylish = 1
 let g:tex_conceal = ''
-let g:tex_flavor = 'latex'
 let g:tex_isk='48-57,a-z,A-Z,192-255,:'
-let g:vimtex_fold_enabled = 1
-let g:vimtex_fold_types = {
-      \ 'markers' : {'enabled': 0},
-      \ 'sections' : {'parse_levels': 1},
-      \}
-let g:vimtex_format_enabled = 1
-let g:vimtex_view_automatic = 1
-let g:vimtex_view_forward_search_on_start = 0
+" let g:vimtex_fold_enabled = 1
+" let g:vimtex_fold_types = {
+      " \ 'markers' : {'enabled': 0},
+      " \ 'sections' : {'parse_levels': 1},
+      " \}
+" let g:vimtex_format_enabled = 1
+" let g:vimtex_view_automatic = 1
 let g:vimtex_toc_config = {
       \ 'split_pos' : 'left',
       \ 'mode' : 2,
@@ -294,7 +299,7 @@ let g:vimtex_complete_bib = {
       \ 'simple' : 1,
       \ 'menu_fmt' : '@year, @author_short, @title',
       \}
-let g:vimtex_echo_verbose_input = 0
+" let g:vimtex_echo_verbose_input = 0
 
 
 
