@@ -26,6 +26,7 @@ Plug 'junegunn/fzf.vim'
 " auto brackets
 Plug 'tmsvg/pear-tree'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 Plug 'junegunn/rainbow_parentheses.vim'
 
 " Indent line
