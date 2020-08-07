@@ -120,7 +120,7 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-nnoremap <CR> o<Esc>
+" nnoremap <CR> o<Esc>
 nnoremap <Leader>rf :checkt<CR>
 
 
@@ -476,16 +476,19 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 let g:coc_global_extensions = [
+	  \ 'coc-jedi',
       \ 'coc-vimtex',
       \ 'coc-json',
-      \ 'coc-python',
       \ 'coc-yaml',
       \ 'coc-yank',
       \ 'coc-explorer',
       \ 'coc-snippets',
-      \ 'coc-sh'
+      \ 'coc-sh',
+      \ 'coc-diagnostic'
       \]
       " \ 'coc-pyright',
+      " \ 'coc-python',
+      " \ 'coc-jedi',
 
 " =============== coc yank ============================
 nnoremap <silent> <Leader>y  :<C-u>CocList -A --normal yank<cr>
@@ -571,7 +574,7 @@ let g:indentLine_faster     = 1
 
 " linting
 let g:ale_linters = {
-\   'python': ['flake8'],
+\   'python': ['flake8', 'mypy'],
 \}
 let g:ale_python_flake8_options = '--ignore=E501,W503,E402,E116,E203,W391'
 
@@ -629,4 +632,3 @@ nnoremap <expr> <Leader>F (len(system('git rev-parse')) ? ':Files' : ':GFiles --
 
 
 map <silent><Leader>G :call setbufvar(winbufnr(popup_atcursor(systemlist("cd " . shellescape(fnamemodify(resolve(expand('%:p')), ":h")) . " && git log --no-merges -n 1 -L " . shellescape(line("v") . "," . line(".") . ":" . resolve(expand("%:p")))), { "padding": [1,1,1,1], "pos": "botleft", "wrap": 0 })), "&filetype", "git")<CR>
-

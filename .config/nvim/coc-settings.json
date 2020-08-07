@@ -1,4 +1,5 @@
 {
+    "coc.preferences.hoverTarget": "float",
     // explorer
     "explorer.icon.enableNerdfont": true,
     "explorer.previewAction.onHover": true,
@@ -25,7 +26,6 @@
         "tex"
     ],
     // Python
-    "coc.preferences.hoverTarget": "float",
     "python.linting.enabled": false,
     "python.analysis.diagnosticEnabled": false,
     "python.linting.flake8Enabled": false,
@@ -34,7 +34,8 @@
         "--ignore=E501,W503,E402,E116,E203,W391",
         "--format=default"
     ],
-    "python.linting.pylintEnabled": false,
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": "~/anaconda3/envs/neovim/bin/mypy",
     "python.formatting.provider": "black",
     "python.formatting.blackPath": "~/anaconda3/envs/neovim/bin/black",
     "python.condaPath": "~/anaconda3/bin/conda",
