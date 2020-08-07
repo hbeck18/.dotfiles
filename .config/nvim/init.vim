@@ -12,6 +12,7 @@ Plug 'itchyny/lightline.vim'
 
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'psf/black'
 
 " vista
 Plug 'liuchengxu/vista.vim', { 'for': ['python']}
@@ -565,6 +566,9 @@ nnoremap <Leader>v :Vista coc<CR>
 " ================================
 let python_highlight_all=1
 let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
+autocmd FileType python setlocal indentkeys-=<:>
+autocmd FileType python setlocal indentkeys-=:
+autocmd BufWritePre *.py execute ':Black'
 
 " indentLine
 let g:indentLine_first_char = '|'
