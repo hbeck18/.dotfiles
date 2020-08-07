@@ -131,8 +131,6 @@ nnoremap <Leader>rf :checkt<CR>
 
 function! LightlineMode()
   return &filetype ==# 'vista' ? 'VISTA' :
-        \ &filetype ==# 'ctrlsf' ? 'CTRLSF' :
-        \ &filetype ==# 'fugitive' ? 'FUGITIVE' :
         \ &filetype ==# 'fzf' ? 'FZF' :
         \ lightline#mode()
 endfunction
@@ -479,15 +477,15 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 let g:coc_global_extensions = [
       \ 'coc-vimtex',
-      \ 'coc-python',
       \ 'coc-json',
+      \ 'coc-python',
       \ 'coc-yaml',
       \ 'coc-yank',
       \ 'coc-explorer',
       \ 'coc-snippets',
       \ 'coc-sh'
       \]
-
+      " \ 'coc-pyright',
 
 " =============== coc yank ============================
 nnoremap <silent> <Leader>y  :<C-u>CocList -A --normal yank<cr>
@@ -625,3 +623,10 @@ endif
 " If in git directory, show only files that are committed, staged, or unstaged
 " else use regular :Files
 nnoremap <expr> <Leader>F (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
+
+
+
+
+
+map <silent><Leader>G :call setbufvar(winbufnr(popup_atcursor(systemlist("cd " . shellescape(fnamemodify(resolve(expand('%:p')), ":h")) . " && git log --no-merges -n 1 -L " . shellescape(line("v") . "," . line(".") . ":" . resolve(expand("%:p")))), { "padding": [1,1,1,1], "pos": "botleft", "wrap": 0 })), "&filetype", "git")<CR>
+
