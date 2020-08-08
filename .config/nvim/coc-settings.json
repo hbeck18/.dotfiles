@@ -34,12 +34,12 @@
         "--ignore=E501,W503,E402,E116,E203,W391",
         "--format=default"
     ],
-    "python.linting.mypyEnabled": true,
+    "python.linting.mypyEnabled": false,
     "python.linting.mypyPath": "~/anaconda3/envs/neovim/bin/mypy",
     "python.formatting.provider": "black",
     "python.formatting.blackPath": "~/anaconda3/envs/neovim/bin/black",
     "python.condaPath": "~/anaconda3/bin/conda",
-    "python.jediEnabled": true,
+    "python.jediEnabled": false,
     "python.jediPath": "~/anaconda3/envs/neovim/lib/python3.8/site-packages/",
     // diagnostics
     "diagnostic.displayByAle": true

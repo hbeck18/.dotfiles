@@ -12,7 +12,7 @@ Plug 'itchyny/lightline.vim'
 
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'psf/black'
+Plug 'psf/black', { 'branch': 'stable' }
 
 " vista
 Plug 'liuchengxu/vista.vim', { 'for': ['python']}
@@ -28,6 +28,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'tmsvg/pear-tree'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+
+" better parantheses
 Plug 'junegunn/rainbow_parentheses.vim'
 
 " Indent line
@@ -190,7 +192,8 @@ nnoremap <Leader>t :call NERDComment('Toggle', 'Toggle')<CR>
 
 
 " --- Pear Tree
-
+"  -----
+"  -----
 let g:pear_tree_smart_openers = 1
 let g:pear_tree_smart_closers = 1
 let g:pear_tree_smart_backspace = 1
@@ -235,6 +238,9 @@ nmap S <plug>(SubversiveSubstituteToEndOfLine)
 xmap s <plug>(SubversiveSubstitute)
 xmap p <plug>(SubversiveSubstitute)
 xmap P <plug>(SubversiveSubstitute)
+
+
+
 " yoink history
 nmap <c-n> <plug>(YoinkPostPasteSwapBack)
 nmap <c-p> <plug>(YoinkPostPasteSwapForward)
@@ -313,7 +319,6 @@ let g:vimtex_complete_bib = {
 " --- Markdown ---
 " =====================================
 " =====================================
-
 set conceallevel=0
 let g:vim_markdown_conceal = 0
 let g:tex_conceal = ""
@@ -327,7 +332,6 @@ augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init()
   autocmd FileType tex call pencil#init()
-  " autocmd FileType text         call pencil#init({'wrap': 'hard'})
 augroup END
 
 
@@ -485,7 +489,6 @@ let g:coc_global_extensions = [
       \ 'coc-explorer',
       \ 'coc-snippets',
       \ 'coc-sh',
-      \ 'coc-diagnostic'
       \]
       " \ 'coc-pyright',
       " \ 'coc-python',
@@ -578,26 +581,20 @@ let g:indentLine_faster     = 1
 
 " linting
 let g:ale_linters = {
-\   'python': ['flake8', 'mypy'],
+\   'python': ['flake8'],
 \}
 let g:ale_python_flake8_options = '--ignore=E501,W503,E402,E116,E203,W391'
 
-" function! LinterStatus() abort
-    " let l:counts = ale#statusline#Count(bufnr(''))
-    " let l:all_errors = l:counts.error + l:counts.style_error
-    " let l:all_non_errors = l:counts.total - l:all_errors
-    " return l:counts.total == 0 ? 'OK' : printf(
-        " \   '%d? %d? ',
-        " \   all_non_errors,
-        " \   all_errors
-        " \)
-" endfunction
-" set statusline+=%=
-" set statusline+=\ %{LinterStatus()}
+let g:ale_set_loclist=0
+let g:ale_set_quickfix=0
 
-
-
-
+function! OpenALEResults()
+  let l:bfnum = bufnr('')
+  let l:items = ale#engine#GetLoclist(l:bfnum)
+  call setqflist([], 'r', {'items': l:items, 'title': 'ALE results'})
+  botright cwindow
+endfunction"
+nnoremap <leader>e :call OpenALEResults()<CR>
 
 " =============================================
 " --- fzf -------------------------------------
