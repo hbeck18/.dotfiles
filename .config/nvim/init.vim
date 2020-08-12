@@ -584,6 +584,9 @@ let g:ale_linters = {
 \   'python': ['flake8'],
 \}
 let g:ale_python_flake8_options = '--ignore=E501,W503,E402,E116,E203,W391'
+let b:ale_python_flake8_executable = "~/anaconda3/envs/neovim/bin/flake8"
+let b:ale_python_flake8_use_global = 1
+let g:ale_virtualenv_dir_names = []
 
 let g:ale_set_loclist=0
 let g:ale_set_quickfix=0
