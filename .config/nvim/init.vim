@@ -1,7 +1,10 @@
 " Specify a directory for plugins:
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'nvim-treesitter/nvim-treesitter'
+if has("nvim-0.5")
+    Plug 'nvim-treesitter/nvim-treesitter'
+    " Plug 'neovim/nvim-lsp'
+endif
 
 " Syntax highlighting
 " Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
@@ -14,10 +17,8 @@ Plug 'itchyny/lightline.vim'
 
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'psf/black', { 'branch': 'stable' }
-
-" vista
 Plug 'liuchengxu/vista.vim', { 'for': ['python']}
+Plug 'psf/black', { 'branch': 'stable' }
 
 " better comments
 Plug 'preservim/nerdcommenter'
@@ -55,7 +56,7 @@ Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 
 " better autocompletion
-Plug 'ajh17/vimcompletesme'
+Plug 'ajh17/vimcompletesme' , {'for': ['tex']}
 
 " Markdown stuff
 Plug 'godlygeek/tabular', {'for': ['markdown']}
@@ -103,7 +104,7 @@ let maplocalleader = "\\"
 " basic settings
 set clipboard=unnamed " adds system-wide clipboard
 set undofile
-set noswapfile
+set undodir^=~/.nvim/undo/
 set shiftwidth=4
 set foldlevel=99
 set expandtab
@@ -118,6 +119,22 @@ set scrolloff=10
 set updatetime=300
 set foldmethod=manual
 map <C-S> :setlocal spell! spelllang=en_us<CR>
+
+" use swap files only for crash insurance, do not block.
+set noswapfile
+set directory^=~/.nvim/swap/
+
+" protect against crash-during-write
+set writebackup
+" " but do not persist backup after successful write
+set nobackup
+" " use rename-and-write-new method whenever safe
+set backupcopy=auto
+"
+" " consolidate the writebackups -- not a big
+" " deal either way, since they usually get deleted
+set backupdir^=~/.nvim/backup/
+set autoread
 " -----
 "  -----
 nnoremap <Leader><space> za
@@ -138,9 +155,6 @@ function! LightlineMode()
   return &filetype ==# 'vista' ? 'VISTA' :
         \ &filetype ==# 'fzf' ? 'FZF' :
         \ lightline#mode()
-endfunction
-function! NearestMethodOrFunction() abort
-  return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 let g:lightline#ale#indicator_checking = "\uf110"
 let g:lightline#ale#indicator_infos = "\uf129"
@@ -423,28 +437,23 @@ endif
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
+" use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+  return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <Leader>c coc#refresh()
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+" " Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" confirm selection
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -530,17 +539,6 @@ let g:coc_snippet_next = '<c-j>'
 let g:coc_snippet_prev = '<c-k>'
 " Use <C-j> for both expand and jump (make expand higher priority.)
 imap <C-j> <Plug>(coc-snippets-expand-jump)
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-let g:coc_snippet_next = '<tab>'
-
 
 
 " Vista ================================
@@ -638,3 +636,69 @@ nnoremap <expr> <Leader>F (len(system('git rev-parse')) ? ':Files' : ':GFiles --
 
 
 map <silent><Leader>G :call setbufvar(winbufnr(popup_atcursor(systemlist("cd " . shellescape(fnamemodify(resolve(expand('%:p')), ":h")) . " && git log --no-merges -n 1 -L " . shellescape(line("v") . "," . line(".") . ":" . resolve(expand("%:p")))), { "padding": [1,1,1,1], "pos": "botleft", "wrap": 0 })), "&filetype", "git")<CR>
+
+
+
+
+" ===================================================
+" === Treesitter ===========
+" ===================================================
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    highlight = {
+      enable = true,                    -- false will disable the whole extension
+    },
+    incremental_selection = {
+      enable = true,
+      keymaps = {                       -- mappings for incremental selection (visual mappings)
+        init_selection = "gnn",         -- maps in normal mode to init the node/scope selection
+        node_incremental = "grn",       -- increment to the upper named parent
+        scope_incremental = "grc",      -- increment to the upper scope (as defined in locals.scm)
+        node_decremental = "grm",       -- decrement to the previous node
+      }
+    },
+    refactor = {
+      highlight_definitions = {
+        enable = true
+      },
+      highlight_current_scope = {
+        enable = true
+      },
+      smart_rename = {
+        enable = true,
+        keymaps = {
+          smart_rename = "grr"          -- mapping to rename reference under cursor
+        }
+      },
+      navigation = {
+        enable = true,
+        keymaps = {
+          goto_definition = "gnd",      -- mapping to go to definition of symbol under cursor
+          list_definitions = "gnD"      -- mapping to list all definitions in current file
+        }
+      }
+    },
+    textobjects = { -- syntax-aware textobjects
+    enable = true,
+    disable = {},
+    keymaps = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["aC"] = "@class.outer",
+        ["iC"] = "@class.inner",
+        ["ac"] = "@conditional.outer",
+        ["ic"] = "@conditional.inner",
+        ["ae"] = "@block.outer",
+        ["ie"] = "@block.inner",
+        ["al"] = "@loop.outer",
+        ["il"] = "@loop.inner",
+        ["is"] = "@statement.inner",
+        ["as"] = "@statement.outer",
+        ["ad"] = "@comment.outer",
+        ["am"] = "@call.outer",
+        ["im"] = "@call.inner"
+      }
+    },
+    ensure_installed = "all" -- one of "all", "language", or a list of languages
+}
+EOF
