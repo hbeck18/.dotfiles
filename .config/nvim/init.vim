@@ -1,6 +1,8 @@
 " Specify a directory for plugins:
 call plug#begin('~/.config/nvim/plugged')
 
+Plug 'nvim-treesitter/nvim-treesitter'
+
 " Syntax highlighting
 " Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
 
