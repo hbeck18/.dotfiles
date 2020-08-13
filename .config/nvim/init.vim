@@ -2,7 +2,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 " Syntax highlighting
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
+" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
 
 " color scheme
 Plug 'drewtempelmeyer/palenight.vim'
