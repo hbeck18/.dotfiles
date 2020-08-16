@@ -1,8 +1,9 @@
 #!usr/bin/bash
 if [[ "$OSTYPE" == "darwin"*  ]]; then
-    curl -L https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
+    curl -OL https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
     tar xzvf nvim-macos.tar.gz
-    alias nvim="./nvim-osx64/bin/nvim"
+    rm nvim-macos.tar.gz
+    alias nvim="$HOME/nvim-osx64/bin/nvim"
 else
     cd ~
     mkdir -p appimages

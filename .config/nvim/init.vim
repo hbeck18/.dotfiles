@@ -114,6 +114,7 @@ set nowrap
 set hidden
 set number relativenumber
 set encoding=UTF-8
+set fileencoding=utf-8
 set cursorline
 set scrolloff=10
 set updatetime=300
@@ -305,14 +306,14 @@ let g:tex_isk='48-57,a-z,A-Z,192-255,:'
       " \}
 " let g:vimtex_format_enabled = 1
 " let g:vimtex_view_automatic = 1
-let g:vimtex_toc_config = {
-      \ 'split_pos' : 'left',
-      \ 'mode' : 2,
-      \ 'fold_enable' : 1,
-      \ 'hotkeys_enabled' : 1,
-      \ 'hotkeys_leader' : '',
-      \ 'refresh_always' : 0,
-      \}
+" let g:vimtex_toc_config = {
+      " \ 'split_pos' : 'left',
+      " \ 'mode' : 2,
+      " \ 'fold_enable' : 1,
+      " \ 'hotkeys_enabled' : 1,
+      " \ 'hotkeys_leader' : '',
+      " \ 'refresh_always' : 0,
+      " \}
 let g:vimtex_quickfix_open_on_warning = 0
 let g:vimtex_quickfix_autoclose_after_keystrokes = 3
 let g:vimtex_imaps_enabled = 1
@@ -511,11 +512,46 @@ nnoremap <silent> <Leader>y  :<C-u>CocList -A --normal yank<cr>
 
 " =============== coc explorer ============================
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
-nmap <Leader>n :CocCommand explorer<CR>
+" nmap <Leader>n :CocCommand explorer<CR>
+nmap <Leader>n :CocCommand explorer --preset floating<CR>
+
+let g:coc_explorer_global_presets = {
+\   '.vim': {
+\     'root-uri': '~/.vim',
+\   },
+\   'tab': {
+\     'position': 'tab',
+\     'quit-on-open': v:true,
+\   },
+\   'floating': {
+\     'position': 'floating',
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingTop': {
+\     'position': 'floating',
+\     'floating-position': 'center-top',
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingLeftside': {
+\     'position': 'floating',
+\     'floating-position': 'left-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingRightside': {
+\     'position': 'floating',
+\     'floating-position': 'right-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'simplify': {
+\     'file-child-template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
+\   }
+\ }
+
+" Use preset argument to open it
+nmap <space>ed :CocCommand explorer --preset .vim<CR>
 nmap <space>ef :CocCommand explorer --preset floating<CR>
-
-
-
 
 
 " ===================== coc snippets ============================
