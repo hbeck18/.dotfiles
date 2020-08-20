@@ -42,5 +42,5 @@
     "python.jediEnabled": false,
     "python.jediPath": "~/anaconda3/envs/neovim/lib/python3.8/site-packages/",
     // diagnostics
-    "diagnostic.displayByAle": true
+    "diagnostic.displayByAle": false
 }

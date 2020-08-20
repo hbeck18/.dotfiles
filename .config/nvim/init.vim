@@ -2,12 +2,12 @@
 call plug#begin('~/.config/nvim/plugged')
 
 if has("nvim-0.5")
-    Plug 'nvim-treesitter/nvim-treesitter'
+    " Plug 'nvim-treesitter/nvim-treesitter'
     " Plug 'neovim/nvim-lsp'
 endif
 
 " Syntax highlighting
-" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': ['python']}
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 " color scheme
 Plug 'drewtempelmeyer/palenight.vim'
@@ -17,7 +17,7 @@ Plug 'itchyny/lightline.vim'
 
 " coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'liuchengxu/vista.vim', { 'for': ['python']}
+" Plug 'liuchengxu/vista.vim', { 'for': ['python']}
 Plug 'psf/black', { 'branch': 'stable' }
 
 " better comments
@@ -36,7 +36,7 @@ Plug 'tpope/vim-repeat'
 Plug 'junegunn/rainbow_parentheses.vim'
 
 " Indent line
-Plug 'Yggdroot/indentLine', { 'for': ['python']}
+" Plug 'Yggdroot/indentLine', { 'for': ['python']}
 
 " tmux integration
 Plug 'christoomey/vim-tmux-navigator'
@@ -56,7 +56,7 @@ Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 
 " better autocompletion
-Plug 'ajh17/vimcompletesme' , {'for': ['tex']}
+Plug 'ajh17/vimcompletesme'
 
 " Markdown stuff
 Plug 'godlygeek/tabular', {'for': ['markdown']}
@@ -121,7 +121,14 @@ set updatetime=300
 set foldmethod=manual
 map <C-S> :setlocal spell! spelllang=en_us<CR>
 
+set viminfo=%,<800,'10,/50,:100
+"           | |    |   |   + command-line history saved
+"           | |    |   + search history saved
+"           | |    + files marks saved
+"           | + lines saved each register (old name for <, vi6.2)
+"           + save/restore buffer list
 " use swap files only for crash insurance, do not block.
+
 set noswapfile
 set directory^=~/.nvim/swap/
 
@@ -136,6 +143,16 @@ set backupcopy=auto
 " " deal either way, since they usually get deleted
 set backupdir^=~/.nvim/backup/
 set autoread
+
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 " -----
 "  -----
 nnoremap <Leader><space> za
@@ -263,6 +280,7 @@ nmap <c-n> <plug>(YoinkPostPasteSwapBack)
 nmap <c-p> <plug>(YoinkPostPasteSwapForward)
 nmap p <plug>(YoinkPaste_p)
 nmap P <plug>(YoinkPaste_P)
+let g:yoinkIncludeDeleteOperations = 1
 
 
 
@@ -412,28 +430,8 @@ nnoremap <Leader>q :SlimeSend1 exit<CR>
 " TextEdit might fail if hidden is not set.
 set hidden
 
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
-set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -475,7 +473,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Introduce function text object
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -493,18 +491,21 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 let g:coc_global_extensions = [
-	  \ 'coc-jedi',
+      \ 'coc-jedi',
       \ 'coc-vimtex',
       \ 'coc-json',
       \ 'coc-yaml',
-      \ 'coc-yank',
-      \ 'coc-explorer',
-      \ 'coc-snippets',
       \ 'coc-sh',
+      \ 'coc-explorer',
+      \ 'coc-yank',
       \]
       " \ 'coc-pyright',
       " \ 'coc-python',
       " \ 'coc-jedi',
+      " \ 'coc-explorer',
+      " \ 'coc-yank',
+      " \ 'coc-explorer',
+      " \ 'coc-snippets',
 
 " =============== coc yank ============================
 nnoremap <silent> <Leader>y  :<C-u>CocList -A --normal yank<cr>
@@ -577,21 +578,21 @@ let g:coc_snippet_prev = '<c-k>'
 imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 
-" Vista ================================
-let g:vista_default_executive = 'ctags'
-let g:vista_executive_for = {
-  \ 'python': 'coc',
-  \ }
-" To enable fzf's preview window set g:vista_fzf_preview.
-" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
-let g:vista_fzf_preview = ['right:50%']
-let g:vista#renderer#enable_icon = 1
-let g:vista#renderer#icons = {
-\   "function": "\uf794",
-\   "variable": "\uf71b",
-\  }
-" key mapping.
-nnoremap <Leader>v :Vista coc<CR>
+" " Vista ================================
+" let g:vista_default_executive = 'ctags'
+" let g:vista_executive_for = {
+  " \ 'python': 'coc',
+  " \ }
+" " To enable fzf's preview window set g:vista_fzf_preview.
+" " The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+" let g:vista_fzf_preview = ['right:50%']
+" let g:vista#renderer#enable_icon = 1
+" let g:vista#renderer#icons = {
+" \   "function": "\uf794",
+" \   "variable": "\uf71b",
+" \  }
+" " key mapping.
+" nnoremap <Leader>v :Vista coc<CR>
 
 
 
@@ -608,6 +609,7 @@ let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
 autocmd FileType python setlocal indentkeys-=<:>
 autocmd FileType python setlocal indentkeys-=:
 autocmd BufWritePre *.py execute ':Black'
+let g:black_linelength = 100
 
 " indentLine
 let g:indentLine_first_char = '|'
@@ -670,71 +672,77 @@ nnoremap <expr> <Leader>F (len(system('git rev-parse')) ? ':Files' : ':GFiles --
 
 
 
+" " ===================================================
+" " === Treesitter ===========
+" " ===================================================
+" lua <<EOF
+" require'nvim-treesitter.configs'.setup {
+    " highlight = {
+      " enable = true,                    -- false will disable the whole extension
+    " },
+    " incremental_selection = {
+      " enable = true,
+      " keymaps = {                       -- mappings for incremental selection (visual mappings)
+        " init_selection = "gnn",         -- maps in normal mode to init the node/scope selection
+        " node_incremental = "grn",       -- increment to the upper named parent
+        " scope_incremental = "grc",      -- increment to the upper scope (as defined in locals.scm)
+        " node_decremental = "grm",       -- decrement to the previous node
+      " }
+    " },
+    " refactor = {
+      " highlight_definitions = {
+        " enable = false
+      " },
+      " highlight_current_scope = {
+        " enable = false
+      " },
+      " smart_rename = {
+        " enable = true,
+        " keymaps = {
+          " smart_rename = "grr"          -- mapping to rename reference under cursor
+        " }
+      " },
+      " navigation = {
+        " enable = true,
+        " keymaps = {
+          " goto_definition = "gnd",      -- mapping to go to definition of symbol under cursor
+          " list_definitions = "gnD"      -- mapping to list all definitions in current file
+        " }
+      " }
+    " },
+    " textobjects = { -- syntax-aware textobjects
+    " enable = true,
+    " disable = {},
+    " keymaps = {
+        " ["af"] = "@function.outer",
+        " ["if"] = "@function.inner",
+        " ["aC"] = "@class.outer",
+        " ["iC"] = "@class.inner",
+        " ["ac"] = "@conditional.outer",
+        " ["ic"] = "@conditional.inner",
+        " ["ae"] = "@block.outer",
+        " ["ie"] = "@block.inner",
+        " ["al"] = "@loop.outer",
+        " ["il"] = "@loop.inner",
+        " ["is"] = "@statement.inner",
+        " ["as"] = "@statement.outer",
+        " ["ad"] = "@comment.outer",
+        " ["am"] = "@call.outer",
+        " ["im"] = "@call.inner"
+      " }
+    " },
+    " ensure_installed = "python" -- one of "all", "language", or a list of languages
+" }
+" EOF
 
-map <silent><Leader>G :call setbufvar(winbufnr(popup_atcursor(systemlist("cd " . shellescape(fnamemodify(resolve(expand('%:p')), ":h")) . " && git log --no-merges -n 1 -L " . shellescape(line("v") . "," . line(".") . ":" . resolve(expand("%:p")))), { "padding": [1,1,1,1], "pos": "botleft", "wrap": 0 })), "&filetype", "git")<CR>
 
 
-
-
-" ===================================================
-" === Treesitter ===========
-" ===================================================
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-    highlight = {
-      enable = true,                    -- false will disable the whole extension
-    },
-    incremental_selection = {
-      enable = true,
-      keymaps = {                       -- mappings for incremental selection (visual mappings)
-        init_selection = "gnn",         -- maps in normal mode to init the node/scope selection
-        node_incremental = "grn",       -- increment to the upper named parent
-        scope_incremental = "grc",      -- increment to the upper scope (as defined in locals.scm)
-        node_decremental = "grm",       -- decrement to the previous node
-      }
-    },
-    refactor = {
-      highlight_definitions = {
-        enable = true
-      },
-      highlight_current_scope = {
-        enable = true
-      },
-      smart_rename = {
-        enable = true,
-        keymaps = {
-          smart_rename = "grr"          -- mapping to rename reference under cursor
-        }
-      },
-      navigation = {
-        enable = true,
-        keymaps = {
-          goto_definition = "gnd",      -- mapping to go to definition of symbol under cursor
-          list_definitions = "gnD"      -- mapping to list all definitions in current file
-        }
-      }
-    },
-    textobjects = { -- syntax-aware textobjects
-    enable = true,
-    disable = {},
-    keymaps = {
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["aC"] = "@class.outer",
-        ["iC"] = "@class.inner",
-        ["ac"] = "@conditional.outer",
-        ["ic"] = "@conditional.inner",
-        ["ae"] = "@block.outer",
-        ["ie"] = "@block.inner",
-        ["al"] = "@loop.outer",
-        ["il"] = "@loop.inner",
-        ["is"] = "@statement.inner",
-        ["as"] = "@statement.outer",
-        ["ad"] = "@comment.outer",
-        ["am"] = "@call.outer",
-        ["im"] = "@call.inner"
-      }
-    },
-    ensure_installed = "all" -- one of "all", "language", or a list of languages
-}
-EOF
+" Semshi =========================================
+" ================================================
+" ================================================
+" ================================================
+let g:semshi#error_sign = v:false
+let g:semshi#always_update_all_highlights = v:true
+let g:semshi#mark_selected_nodes = 0 
+nmap <silent> <leader>1 :Semshi goto name next<CR>
+nmap <silent> <leader>2 :Semshi goto name prev<CR>

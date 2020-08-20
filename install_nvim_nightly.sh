@@ -16,6 +16,6 @@ else
     cd ~
     mkdir -p bin
     cd bin
-    ln -s ../appimages/nvim/AppRun nvim
+    # ln -s ../appimages/nvim/AppRun nvim
     cd ~
 fi
