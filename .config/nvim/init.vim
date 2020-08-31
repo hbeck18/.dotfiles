@@ -386,37 +386,39 @@ let g:voom_tree_placement = "top"
 " =========================================
 " =========================================
 let g:slime_target = "tmux"
+let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
 let g:slime_paste_file = "$HOME/.slime_paste"
 let g:slime_python_ipython = 1
 let g:slime_no_mappings = 1
-xmap <c-c> <Plug>SlimeRegionSend
-nmap <c-c> <Plug>SlimeParagraphSend
-nmap <Leader>a :%SlimeSend<cr>
 let g:slime_cell_delimiter = "# %%"
 
 " --- ipython cell settings
+command EscapeTmux execute "!tmux send-keys -t 2 Escape BSpace"
+xmap <c-c> <Plug>SlimeRegionSend \| gv \|<Esc>
+nmap <c-c> <Plug>SlimeParagraphSend
+nmap <Leader>a :EscapeTmux<CR> \| :%SlimeSend<cr>
 " map <Leader>s to start IPython
-nnoremap <Leader>i :SlimeSend1 ipython --matplotlib<CR>
+nnoremap <Leader>i :EscapeTmux<CR> \| :SlimeSend1 ipython --matplotlib<CR>
 " map <Leader>Q to restart ipython
-nnoremap <Leader>I :IPythonCellRestart<CR>
+nnoremap <Leader>I :EscapeTmux<CR> \| :IPythonCellRestart<CR>
 " map <F5> to save and run script
 " nnoremap <F5> :IPythonCellRun<CR>
-nnorema <F5> :exe "!tmux send -t 2 '\\%run -t " . expand("%") . "' Enter "<CR>
+nnorema <F5> :EscapeTmux<CR> \| :exe "!tmux send -t 2 '\\%run -t " . expand("%") . "' Enter "<CR>
 " map <Leader>c to execute the current cell
-nmap <leader>s <Plug>SlimeSendCell
+nmap <leader>s :EscapeTmux<CR> \| <Plug>SlimeSendCell
 " map <Leader>C to execute the current cell and jump to the next cell
-nnoremap <Leader>S :IPythonCellExecuteCellJump<CR>
+nnoremap <Leader>S :EscapeTmux<CR> \| :IPythonCellExecuteCellJump<CR>
 " map <Leader>l to clear IPython screen
-nnoremap <Leader>0 :IPythonCellClear<CR>
+nnoremap <Leader>0 :EscapeTmux<CR> \| :IPythonCellClear<CR>
 " map [c and ]c to jump to the previous and next cell header
 nnoremap [c :IPythonCellPrevCell<CR>
 nnoremap ]c :IPythonCellNextCell<CR>
 " map <Leader>p to run the previous command
 nnoremap <Leader>p :IPythonCellPrevCommand<CR>
 " map <Leader>d to start debug mode
-nnoremap <F6> :SlimeSend1 %debug<CR>
+nnoremap <F6> :EscapeTmux<CR> \| :SlimeSend1 %debug<CR>
 " map <Leader>q to exit debug mode or IPython
-nnoremap <Leader>q :SlimeSend1 exit<CR>
+nnoremap <Leader>q :EscapeTmux<CR> \| :SlimeSend1 exit<CR>
 
 
 
@@ -473,7 +475,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-" autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Introduce function text object
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -746,3 +748,11 @@ let g:semshi#always_update_all_highlights = v:true
 let g:semshi#mark_selected_nodes = 0 
 nmap <silent> <leader>1 :Semshi goto name next<CR>
 nmap <silent> <leader>2 :Semshi goto name prev<CR>
+
+
+
+" Obsession ======================================
+" ================================================
+" ================================================
+" ================================================
+let g:obsession_no_bufenter = 1
