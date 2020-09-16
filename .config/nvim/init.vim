@@ -36,6 +36,10 @@ Plug 'psf/black', { 'branch': 'stable' }
 
 " snippets
 Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets', {'for': ['tex']}
+
+" Latex
+Plug 'lervag/vimtex', {'for': ['tex']}
 
 " statusbar
 Plug 'itchyny/lightline.vim'
@@ -51,15 +55,23 @@ Plug 'kyazdani42/nvim-web-devicons'
 " undo tree
 Plug 'mbbill/undotree'
 
+" slime
+Plug 'jpalardy/vim-slime', { 'for': ['python']}
+Plug 'hanschen/vim-ipython-cell', { 'for': ['python']}
+
+" smooth scrolling
+Plug 'psliwka/vim-smoothie'
+
+" workspace
+Plug 'thaerkh/vim-workspace'
+
 " Initialize plugin system
 call plug#end()
-
 
 
 " ==============================================================
 " --- Basics ---
 " ==============================================================
-
 syntax on
 let mapleader = ","
 let maplocalleader = "\\"
@@ -114,12 +126,6 @@ set backupdir^=~/.nvim/backup/
 set autoread
 set wildmenu
 set wildmode=list:full,full
-
-" python
-let python_highlight_all=1
-let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
-autocmd FileType python setlocal indentkeys-=<:>
-autocmd FileType python setlocal indentkeys-=:
 
 " file encoding
 set encoding=UTF-8
@@ -188,6 +194,11 @@ nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q  :call ToggleList("Quickfix List", 'c')<CR>
 
 
+" highlight yanked region.
+augroup LuaHighlight
+  autocmd!
+  autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank("IncSearch", 2000)
+augroup END
 
 
 " ==============================================================
@@ -199,6 +210,7 @@ if (has("termguicolors"))
     set termguicolors
     hi LineNr ctermbg=NONE guibg=NONE
 endif
+
 
 " ==============================================================
 " --- Statusline ---
@@ -224,7 +236,6 @@ let g:lightline.component_type = {
   \ 'neomake_errors': 'error',
   \ 'neomake_ok': 'left',
 \}
-
 
 " set statusline=
 " set statusline+=%#LCursor#
@@ -265,7 +276,6 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
 
 
-
 " ==============================================================
 " --- Undo tree ---
 " ==============================================================
@@ -277,15 +287,20 @@ nnoremap <Leader>u :UndotreeToggle<CR>
 
 
 " ==============================================================
+" --- Workspaces ---
+" ==============================================================
+nnoremap <leader>t :ToggleWorkspace<CR>
+let g:workspace_persist_undo_history = 1  " enabled = 1 (default), disabled = 0
+let g:workspace_undodir='.undodir'
+
+
+" ==============================================================
 " --- Better Brackets ---
 " ==============================================================
 let g:rainbow_active = 1
-
 let g:pear_tree_smart_openers = 1
 let g:pear_tree_smart_closers = 1
 let g:pear_tree_smart_backspace = 1
-
-
 
 
 " ==============================================================
@@ -319,7 +334,13 @@ nnoremap <silent> <leader> :WhichKey ','<CR>
 nnoremap <silent> <Localleader> :WhichKey '\'<CR>
 
 
-
+" ==============================================================
+" --- General Python ---
+" ==============================================================
+let python_highlight_all=1
+let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
+autocmd FileType python setlocal indentkeys-=<:>
+autocmd FileType python setlocal indentkeys-=:
 
 
 " ==============================================================
@@ -335,6 +356,44 @@ autocmd BufWritePre *.py execute ':Black'
 let g:black_linelength = 100
 
 
+" ==============================================================
+" --- Slime ---
+" ==============================================================
+let g:slime_target = "tmux"
+" let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
+let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.2"}
+let g:slime_paste_file = "$HOME/.slime_paste"
+let g:slime_python_ipython = 1
+let g:slime_no_mappings = 1
+let g:slime_cell_delimiter = "# %%"
+
+" --- ipython cell settings
+command EscapeTmux execute "!tmux send-keys -t 2 Escape BSpace"
+xmap <c-c> <Plug>SlimeRegionSend \| gv \|<Esc>
+nmap <c-c> <Plug>SlimeParagraphSend
+nmap <Leader>a :EscapeTmux<CR> \| :%SlimeSend<cr>
+" map <Leader>s to start IPython
+nnoremap <Leader>i :EscapeTmux<CR> \| :SlimeSend1 ipython --matplotlib<CR>
+" map <Leader>Q to restart ipython
+nnoremap <Leader>I :EscapeTmux<CR> \| :IPythonCellRestart<CR>
+" map <F5> to save and run script
+" nnoremap <F5> :IPythonCellRun<CR>
+nnorema <F5> :EscapeTmux<CR> \| :exe "!tmux send -t 2 '\\%run -t " . expand("%") . "' Enter "<CR>
+" map <Leader>c to execute the current cell
+nmap <leader>s :EscapeTmux<CR> \| <Plug>SlimeSendCell
+" map <Leader>C to execute the current cell and jump to the next cell
+nnoremap <Leader>S :EscapeTmux<CR> \| :IPythonCellExecuteCellJump<CR>
+" map <Leader>l to clear IPython screen
+" nnoremap <Leader>0 :EscapeTmux<CR> \| :IPythonCellClear<CR>
+" map [c and ]c to jump to the previous and next cell header
+nnoremap [c :IPythonCellPrevCell<CR>
+nnoremap ]c :IPythonCellNextCell<CR>
+" map <Leader>p to run the previous command
+nnoremap <Leader>p :IPythonCellPrevCommand<CR>
+" map <Leader>d to start debug mode
+nnoremap <F6> :EscapeTmux<CR> \| :SlimeSend1 %debug<CR>
+" map <Leader>q to exit debug mode or IPython
+nnoremap <Leader>q :EscapeTmux<CR> \| :SlimeSend1 exit<CR>
 
 
 " ==============================================================
@@ -360,60 +419,21 @@ let g:yoinkSyncSystemClipboardOnFocus = 1
 nnoremap <silent> <Leader>y  :Yanks<CR>
 
 
-
-
 " ==============================================================
 " --- Vista ---
 " ==============================================================
 let g:vista_default_executive = 'nvim_lsp'
 " let g:vista_ignore_kinds = ["Variable"]
-nnoremap <silent> <Leader>v :Vista finder<CR>
-
+autocmd FileType python nnoremap <buffer> <silent> <Leader>v :Vista finder<CR>
 
 
 " ==============================================================
 " --- LSP Settings ---
 " ==============================================================
-:lua << EOF
-  local nvim_lsp = require('nvim_lsp')
-  vim.lsp.set_log_level("debug")
+lua require 'lsp'
 
-  local on_attach = function(_, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-    require'diagnostic'.on_attach()
-
-    -- Mappings.
-    -- local opts = { noremap=true, silent=true }
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua im.lsp.buf.remove_workspace_folder()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua vim.lsp.buf.list_workspace_folders()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
-  end
-
-  local servers = {'jedi_language_server'}
-  for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
-      on_attach = on_attach,
-    }
-  end
-EOF
-
-" mappings
-nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> <leader>rn vim.lsp.buf.rename()<CR>
-
+" --- LSP Completion ---
+" ==============================================================
 autocmd BufEnter * lua require'completion'.on_attach()
 
 " Use <Tab> and <S-Tab> to navigate through popup menu
@@ -428,7 +448,6 @@ function! s:check_back_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
-
 inoremap <silent><expr> <TAB>
   \ pumvisible() ? "\<C-n>" :
   \ <SID>check_back_space() ? "\<TAB>" :
@@ -439,6 +458,7 @@ let g:completion_confirm_key = ""
 imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
                  \ "\<Plug>(completion_confirm_completion)"  : "\<c-e>\<CR>" :  "\<CR>"
 
+let g:completion_auto_change_source = 1
 let g:completion_matching_strategy_list = ['exact', 'fuzzy', 'substring', 'all']
 
 " Chain completion list
@@ -451,76 +471,82 @@ let g:completion_chain_complete_list = {
             \   'comment': [],
             \   'string' : [{'complete_items': ['path']}]}}
 
-" --- diagnostics
+" snippet support
+let g:completion_enable_snippet = 'UltiSnips'
+let g:UltiSnipsExpandTrigger = '<c-j>'
+
+" ignore case when completing
+let g:completion_matching_ignore_case = 1
+
+" --- LSP Diagnostics ---
+" ==============================================================
 " delay when inserting text
 let g:diagnostic_insert_delay = 1
-function! OpenErrors()
-    :OpenDiagnostic
-    :wincmd p  " leave focus on quickfix list
-    botright cwindow
-endfunction
-nnoremap <leader>e :call OpenErrors()<CR>
+" function! OpenErrors()
+"     :OpenDiagnostic
+"     :wincmd p  " leave focus on quickfix list
+"     botright cwindow
+" endfunction
+" nnoremap <leader>e :call OpenErrors()<CR>
 let g:diagnostic_enable_virtual_text = 1
 
 
-
-
 " ==============================================================
-" --- Treesitter ---
+" --- TreeSitter ---
 " ==============================================================
 set foldmethod=expr
 set foldlevel=99
 set foldexpr=nvim_treesitter#foldexpr()
 nnoremap <Leader>rt :write \| edit \| TSBufEnable highlight<CR>
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "python",     -- one of "all", "language", or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "gnn",
-      node_incremental = "grn",
-      scope_incremental = "grc",
-      node_decremental = "grm",
-    },
-  },
-  refactor = {
-    smart_rename = {
-      enable = true,
-      keymaps = {
-        smart_rename = "gr",
-      },
-    },
-    navigation = {
-      enable = true,
-      keymaps = {
-        goto_definition_lsp_fallback = "gd",
-      },
-    },
-  },
-  textobjects = {
-    move = {
-      enable = true,
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
-    },
-  },
-}
-EOF
+lua require 'treesitter'
+
+
+" ==============================================================
+" --- Latex ---
+" ==============================================================
+" let g:vimtex_view_method = 'zathura'
+" let g:vimtex_compiler_progname = 'nvr'
+" let g:tex_flavor = "latex"
+augroup VimCompletesMeTex
+   autocmd!
+   autocmd FileType tex
+       \ let b:vcm_omni_pattern = g:vimtex#re#neocomplete
+augroup END
+if has('mac')
+    let g:vimtex_view_method = 'skim'
+elseif has('win32')
+    let g:vimtex_view_method = 'sumatrapdf'
+    let g:vimtex_view_general_options = '-reuse-instance @pdf'
+    let g:vimtex_view_general_options_latexmk = '-reuse-instance'
+elseif has('unix')
+    let g:vimtex_view_method = 'zathura'
+endif
+let g:vimtex_compiler_progname = 'nvr'
+let g:tex_flavor = "latex"
+let g:tex_stylish = 1
+let g:tex_conceal = ''
+let g:tex_isk='48-57,a-z,A-Z,192-255,:'
+" let g:vimtex_fold_enabled = 1
+" let g:vimtex_fold_types = {
+      " \ 'markers' : {'enabled': 0},
+      " \ 'sections' : {'parse_levels': 1},
+      " \}
+" let g:vimtex_format_enabled = 1
+" let g:vimtex_view_automatic = 1
+" let g:vimtex_toc_config = {
+      " \ 'split_pos' : 'left',
+      " \ 'mode' : 2,
+      " \ 'fold_enable' : 1,
+      " \ 'hotkeys_enabled' : 1,
+      " \ 'hotkeys_leader' : '',
+      " \ 'refresh_always' : 0,
+      " \}
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_autoclose_after_keystrokes = 3
+let g:vimtex_imaps_enabled = 1
+let g:vimtex_complete_img_use_tail = 1
+let g:vimtex_complete_bib = {
+      \ 'simple' : 1,
+      \ 'menu_fmt' : '@year, @author_short, @title',
+      \}
+" let g:vimtex_echo_verbose_input = 0

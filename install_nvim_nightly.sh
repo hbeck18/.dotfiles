@@ -1,9 +1,11 @@
 #!usr/bin/bash
 if [[ "$OSTYPE" == "darwin"*  ]]; then
-    curl -OL https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
-    tar xzvf nvim-macos.tar.gz
-    rm nvim-macos.tar.gz
-    alias nvim="$HOME/nvim-osx64/bin/nvim"
+    # curl -OL https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
+    # tar xzvf nvim-macos.tar.gz
+    # rm nvim-macos.tar.gz
+    # alias nvim="$HOME/nvim-osx64/bin/nvim"
+    brew tap jason0x43/homebrew-neovim-nightly
+    brew cask install neovim-nightly
 else
     cd ~
     mkdir -p appimages
