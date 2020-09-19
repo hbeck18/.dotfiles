@@ -31,8 +31,10 @@ Plug 'nvim-lua/diagnostic-nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 
 " linting/fixing
-Plug 'neomake/neomake'
-Plug 'psf/black', { 'branch': 'stable' }
+" Plug 'neomake/neomake', { 'for': ['python']}
+Plug 'dense-analysis/ale', { 'for': ['python']}
+Plug 'maximbaz/lightline-ale', { 'for': ['python']}
+" Plug 'psf/black', { 'branch': 'stable' }
 
 " snippets
 Plug 'SirVer/ultisnips'
@@ -49,8 +51,8 @@ Plug 'sinetoami/lightline-neomake'
 Plug 'nvim-treesitter/nvim-treesitter'
 
 " file explorer
-Plug 'kyazdani42/nvim-tree.lua'
-Plug 'kyazdani42/nvim-web-devicons'
+" Plug 'kyazdani42/nvim-tree.lua'
+" Plug 'kyazdani42/nvim-web-devicons'
 
 " undo tree
 Plug 'mbbill/undotree'
@@ -218,24 +220,33 @@ endif
 let g:lightline = {}
 let g:lightline.colorscheme = 'palenight'
 
+let g:lightline#ale#indicator_checking = "\uf110"
+let g:lightline#ale#indicator_infos = "\uf129"
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e"
+let g:lightline#ale#indicator_ok = "\uf00c"
+
 let g:lightline.component_expand = {
-  \ 'neomake_infos': 'lightline#neomake#infos',
-  \ 'neomake_warnings': 'lightline#neomake#warnings',
-  \ 'neomake_errors': 'lightline#neomake#errors',
-  \ 'neomake_ok': 'lightline#neomake#ok',
-\}
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_infos': 'lightline#ale#infos',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
 
 let g:lightline.active = { 
   \ 'left': [['mode'],  ['filename', 'modified']],
-  \ 'right': [['lineinfo'], ['percent'], ['neomake_warnings', 'neomake_errors', 
-  \            'neomake_infos', 'neomake_ok']],
+  \ 'right': [['lineinfo'], ['percent'], ['linter_checking', 'linter_errors', 
+  \            'linter_warnings', 'linter_infos', 'linter_ok']],
 \}
 
 let g:lightline.component_type = {
-  \ 'neomake_warnings': 'warning',
-  \ 'neomake_errors': 'error',
-  \ 'neomake_ok': 'left',
-\}
+      \     'linter_checking': 'right',
+      \     'linter_infos': 'right',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'right',
+      \ }
 
 " set statusline=
 " set statusline+=%#LCursor#
@@ -338,7 +349,7 @@ nnoremap <silent> <Localleader> :WhichKey '\'<CR>
 " --- General Python ---
 " ==============================================================
 let python_highlight_all=1
-let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3.8')
+let g:python3_host_prog=expand('~/anaconda3/envs/neovim/bin/python3')
 autocmd FileType python setlocal indentkeys-=<:>
 autocmd FileType python setlocal indentkeys-=:
 
@@ -346,22 +357,37 @@ autocmd FileType python setlocal indentkeys-=:
 " ==============================================================
 " --- Linting/fixing ---
 " ==============================================================
-let g:neomake_python_flake8_maker = {
-    \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391,E741'],
-    \}
-let g:neomake_python_enabled_makers = ['flake8']
-call neomake#configure#automake('nrwi', 250)
+" let g:neomake_python_flake8_maker = {
+"     \ 'args': ['--ignore=E501,W503,E402,E116,E203,W391,E741'],
+"     \}
+" let g:neomake_python_enabled_makers = ['flake8']
+" autocmd FileType python call neomake#configure#automake('nrwi', 100)
 
-autocmd BufWritePre *.py execute ':Black'
-let g:black_linelength = 100
+" autocmd BufWritePre *.py execute ':Black'
+" let g:black_linelength = 100
+
+let g:ale_fixers = {'python': ['black']}
+" let g:ale_python_black_executable = '~/anaconda3/envs/neovim/bin/black'
+let g:ale_python_black_use_global = 1
+let g:ale_python_black_options = '--line-length 100'
+let g:ale_fix_on_save = 1
+
+let g:ale_linters = {'python': ['flake8']}
+let g:ale_python_flake8_options = '--ignore=E501,W503,E402,E116,E203,W391'
+" let g:ale_python_flake8_executable = "~/anaconda3/envs/neovim/bin/flake8"
+let g:ale_python_flake8_use_global = 1
+let g:ale_python_autopep8_use_global = 1
+let g:ale_virtualenv_dir_names = []
+
+" let g:ale_disable_lsp = 1
 
 
 " ==============================================================
 " --- Slime ---
 " ==============================================================
 let g:slime_target = "tmux"
-" let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
-let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.2"}
+let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
+" let g:slime_default_config = {"socket_name": get(split($TMUX, ","), 0), "target_pane": ":.2"}
 let g:slime_paste_file = "$HOME/.slime_paste"
 let g:slime_python_ipython = 1
 let g:slime_no_mappings = 1
@@ -393,7 +419,7 @@ nnoremap <Leader>p :IPythonCellPrevCommand<CR>
 " map <Leader>d to start debug mode
 nnoremap <F6> :EscapeTmux<CR> \| :SlimeSend1 %debug<CR>
 " map <Leader>q to exit debug mode or IPython
-nnoremap <Leader>q :EscapeTmux<CR> \| :SlimeSend1 exit<CR>
+" nnoremap <Leader>q :EscapeTmux<CR> \| :SlimeSend1 exit<CR>
 
 
 " ==============================================================
@@ -432,6 +458,7 @@ autocmd FileType python nnoremap <buffer> <silent> <Leader>v :Vista finder<CR>
 " ==============================================================
 lua require 'lsp'
 
+" ==============================================================
 " --- LSP Completion ---
 " ==============================================================
 autocmd BufEnter * lua require'completion'.on_attach()
@@ -478,6 +505,7 @@ let g:UltiSnipsExpandTrigger = '<c-j>'
 " ignore case when completing
 let g:completion_matching_ignore_case = 1
 
+" ==============================================================
 " --- LSP Diagnostics ---
 " ==============================================================
 " delay when inserting text
